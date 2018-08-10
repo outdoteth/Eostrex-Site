@@ -24,12 +24,8 @@ body {
     grid-template-columns: 1fr 1fr;
 }
 
-.Wallet-Balance-Box > div:nth-child(odd) {
-    
-}
-
 #profile {
-    background-color: background-color: rgb(25, 33, 38);;
+    background-color: background-color: rgb(25, 33, 38);
 }
 
 .nums {
@@ -131,8 +127,9 @@ body {
     font-size:12px;
     font-weight: bold;
     font-family: 'Questrial', sans-serif;
-    height: 25px;
+    height: 27px;
     width: 40%;
+    margin-left: 5px;
     color: rgba(255, 255, 255, 0.4);
     background: none;
     border:1px solid rgba(255, 255, 255, 0.4); 
@@ -302,6 +299,18 @@ body {
 }
 
 
+.account-select {
+    font-size:12px;
+    font-weight: bold;
+    font-family: 'Questrial', sans-serif;
+    margin-left: -4px;
+    color: white;
+    border: none;
+    padding-left: 0;
+    background-color: rgb(25, 33, 38);
+}
+
+
 .login-but {
     font-size:12px;
     font-weight: bold;
@@ -340,7 +349,7 @@ body {
     font-size:12px;
     font-weight: bold;
     font-family: 'Questrial', sans-serif;
-    height: 25px;
+    height: 27px;
     width: 120px;
     color: white;
     background: rgb(68, 190, 36);;
@@ -370,13 +379,13 @@ body {
 }
 
 .coin-contract::placeholder {
-    color: white;
+    color: rgb(255, 255, 255, 0.3);
     font-size: 12px;
     font-style: italic;
 }
 
 .coin-symbol::placeholder {
-    color: white;
+    color: rgb(255, 255, 255, 0.3);
     font-size: 12px;
     font-style: italic;
 }

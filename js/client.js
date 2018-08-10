@@ -9,6 +9,9 @@ import MyProfile from "./MyProfile.js";
 import MyOrders from "./MyOrders.js";
 import Chart from "./Chart.js"
 
+import CoinInfo from "./CoinInfo/CoinInfo.js";
+import * as CoinInfoActions from "./CoinInfo/CoinInfoActions.js";
+
 
 class WholePage extends React.Component {
 	constructor(props) {
@@ -22,7 +25,16 @@ class WholePage extends React.Component {
 		}
 
 		this.getPrice = this.getPrice.bind(this);
+		this.updateCoinInfo = this.updateCoinInfo.bind(this);
 	};
+
+	componentWillMount() {
+		this.updateCoinInfo({ contract: this.props.match.params.contract, symbol: this.props.match.params.symbol })
+	}
+
+	updateCoinInfo(newCoin) {
+		CoinInfoActions.newCoinSetter(newCoin);
+	}
 
 	getPrice() {
 		//return price

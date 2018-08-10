@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Route, Link, HashRouter } from "react-router-d
 import AccountInfo from "./AccountInfo/AccountInfo.js";
 import * as AccountActions from "./AccountInfo/AccountActions.js";
 
+import CoinInfo from "./CoinInfo/CoinInfo.js";
+import * as CoinInfoActions from "./CoinInfo/CoinInfoActions.js";
+
 import { accountDispatcher } from "./AccountInfo/AccountInfo.js";
 
 class LoginBox extends React.Component {
@@ -119,6 +122,7 @@ export default class TopBanner extends React.Component {
 								symbol: this.state.symbolSearch
 							}
 					});
+		CoinInfoActions.newCoinSetter({contract: this.state.contractSearch, symbol: this.state.symbolSearch});
 	}
 
 	setAccounts(accountNames) {

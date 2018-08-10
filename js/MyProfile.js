@@ -3,10 +3,23 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Link, HashRouter } from "react-router-dom";
 
 import AccountInfo from "./AccountInfo/AccountInfo.js";
+import CoinInfo from "./CoinInfo/CoinInfo.js";
 
 class DepositBox extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.handleEosDeposit = this.handleEosDeposit.bind(this);
+		this.handleTokenDeposit = this.handleTokenDeposit.bind(this);
+	}
+
+
+	handleEosDeposit() {
+
+	}
+
+	handleTokenDeposit() {
+
 	}
 
 	render() {
@@ -21,9 +34,9 @@ class DepositBox extends React.Component {
 	                    <input placeholder="0.000 EOS" class="dep-input"></input>
 	                    <input class="dep-with-but" type="submit" value="Deposit"></input>
 	                </form> 
-	                <h3 class="deposit-tits">Deposit Karma</h3>
+	                <h3 class="deposit-tits">Deposit {CoinInfo.coin.symbol}</h3>
 	                <form class="dep-form  dep-2">
-	                    <input placeholder="0.000 Karma" class="dep-input"></input>
+	                    <input placeholder={"0.000 "+CoinInfo.coin.symbol} class="dep-input"></input>
 	                    <input class="dep-with-but" type="submit" value="Deposit"></input>
 	                </form>
 		        </div>
@@ -34,6 +47,17 @@ class DepositBox extends React.Component {
 class WithdrawBox extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.handleEosWithdraw = this.handleEosWithdraw.bind(this);
+		this.handleTokenWithdraw = this.handleTokenWithdraw.bind(this);
+	}
+
+	handleEosWithdraw() {
+
+	}
+
+	handleTokenWithdraw() {
+		
 	}
 
 	render() {
@@ -48,9 +72,9 @@ class WithdrawBox extends React.Component {
 	                    <input placeholder="0.000 EOS" class="dep-input"></input>
 	                    <input class="dep-with-but" type="submit" value="Withdraw"></input>
 	                </form> 
-	                <h3 class="deposit-tits">Withdraw Karma</h3>
+	                <h3 class="deposit-tits">Withdraw {CoinInfo.coin.symbol}</h3>
 	                <form class="dep-form  dep-2">
-	                    <input placeholder="0.000 Karma" class="dep-input"></input>
+	                    <input placeholder={"0.000 "+CoinInfo.coin.symbol} class="dep-input"></input>
 	                    <input class="dep-with-but" type="submit" value="Withdraw"></input>
 	                </form>
 		        </div>
@@ -89,8 +113,36 @@ class DepositWithdrawBox extends React.Component {
 }
 
 export default class MyProfile extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+		this.state = {
+			wallet: {
+				eosBalance: "0.000", 
+				tokenBalance: "0.000"
+			},
+			contract: {
+				eosBalance: "0.000",
+				tokenBalance: "0.000"
+			}
+		}
+		this.setBalances = this.setBalances.bind(this);
+	}
+
+	componentWillMount() {
+		AccountInfo.on("ACCOUNT_BALANCES_UPDATED", this.setBalances);
+	}
+
+	componentWillUnmount() {
+		AccountInfo.removeListener("ACCOUNT_BALANCES_UPDATED", this.setBalances);
+	}
+
+	setBalances() {
+		this.setState({
+			wallet: {
+				eosBalance: AccountInfo.account.wallet.eosBalance,
+				tokenBalance: AccountInfo.account.wallet.tokenBalance
+			}
+		})
 	}
 
 	render() {
@@ -101,18 +153,18 @@ export default class MyProfile extends React.Component {
 		                <div><h3 class="subtit-ass">Asset</h3></div>
 		                <div><h3 class="subtit-ass b">Amount</h3></div>
 		                <div><h3 class="nums">EOS</h3></div>
-		                <div><h3 class="nums b">1000</h3></div>
-		                <div><h3 class="nums">Karma</h3></div>
-		                <div><h3 class="nums b">1000</h3></div>
+		                <div><h3 class="nums b">{this.state.wallet.eosBalance}</h3></div>
+		                <div><h3 class="nums">{CoinInfo.coin.symbol}</h3></div>
+		                <div><h3 class="nums b">{this.state.wallet.tokenBalance}</h3></div>
 		            </div>
 		            <div class="contract-balance">
-		                <div class="Wallet-Title"><h3 class="tit-h3">Contract Balance</h3></div>
+		                <div class="Wallet-Title"><h3 class="tit-h3">Smart Contract Balance</h3></div>
 		                <div><h3 class="subtit-ass">Asset</h3></div>
 		                <div><h3 class="subtit-ass b">Amount</h3></div>
 		                <div><h3 class="nums">EOS</h3></div>
-		                <div><h3 class="nums b">1000</h3></div>
-		                <div><h3 class="nums">Karma</h3></div>
-		                <div><h3 class="nums b">1000</h3></div>
+		                <div><h3 class="nums b">{this.state.contract.eosBalance}</h3></div>
+		                <div><h3 class="nums">{CoinInfo.coin.symbol}</h3></div>
+		                <div><h3 class="nums b">{this.state.contract.tokenBalance}</h3></div>
 		            </div>
 		            <DepositWithdrawBox/>
 		        </div>

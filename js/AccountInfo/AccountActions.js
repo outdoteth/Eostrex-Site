@@ -17,4 +17,8 @@ export const accountSelect = function(selected) {
 	accountDispatcher.dispatch({type: "ACCOUNT_SELECT", data: selected});
 }
 
+export const accountUpdateBalances = function() {
+	accountDispatcher.dispatch({type: "UPDATE_ACCOUNT_BALANCE", data: null});
+}
+
 export const scatterObject = scatter; 
