@@ -1,0 +1,382 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Questrial', sans-serif;
+    font-size: 10px;
+    font-weight: normal;
+    color: white;
+}
+
+.dep-1 {
+    margin-top: 20px;
+}
+
+
+.Wallet-Balance-Box {
+    display: grid;
+    max-height: 100px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.contract-balance {
+    display: grid;
+     max-height: 100px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.Wallet-Balance-Box > div:nth-child(odd) {
+    
+}
+
+#profile {
+    background-color: background-color: rgb(25, 33, 38);;
+}
+
+.nums {
+    padding: 0px;
+    margin: 0px 15px 8px 15px;
+}
+
+.b {
+    float: right;
+}
+
+.dep-input::placeholder {
+    color: rgb(255, 255, 255, 0.3);
+    font-size: 12px;
+    font-style: italic;
+}
+
+.subtit-ass {
+    margin: 7px 11px 8px 15px;
+}
+
+.contract-title {
+    padding-left: 10px;
+    margin: 0px 0px 0px 0px;
+    align-self: center;
+    grid-column: 1/3;
+}
+
+.tit-h3 {
+    margin: 10px 4px;
+}
+
+.Wallet-Title {
+    padding-left: 10px;
+    align-self: center;
+    grid-column: 1/3;
+    border-top: 1px solid white;
+}
+
+#container {
+    position: absolute;
+    top: 44px;
+    width: 100%;
+    height: calc(100% - 44px);
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    grid-auto-rows: 7fr 4fr;
+}
+
+#profile {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 2em;
+}
+
+.deposit-withdraw-buts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column: 1/3;
+}
+
+.dep-but-h3 {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.dep-selected {
+    background-color: rgb(255, 255, 255, 0.2);
+    
+    border-bottom: 1px solid white;
+}
+
+.dep-with-div {
+    height:25px;
+}
+
+.dep-with-div:hover {
+    cursor: pointer;
+    background-color: rgb(255, 255, 255, 0.2);
+}
+
+.deposit-tits {
+    grid-column: 1/3;
+    margin-bottom: 1px;
+    margin-left: 14px;
+}
+
+.deposit-withdraw {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.dep-2 {
+    margin-bottom: 10px;
+}
+
+.dep-with-but {
+    font-size:12px;
+    font-weight: bold;
+    font-family: 'Questrial', sans-serif;
+    height: 25px;
+    width: 40%;
+    color: rgba(255, 255, 255, 0.4);
+    background: none;
+    border:1px solid rgba(255, 255, 255, 0.4); 
+    
+}
+
+.dep-with-but:hover {
+    color: white;
+    border-color: white;
+    cursor: pointer;
+}
+
+.dep-input {
+    color: white;
+    width: 50%;
+    background-color: rgb(92, 101, 107);
+    border: 1px solid black;
+    height: 25px;
+    padding-left: 5px;
+}
+
+.dep-form {
+    grid-column: 1/3;
+    margin-left: 14px;
+}
+
+#container > div {
+    background-color: rgb(25, 33, 38);
+    border: 0.1px solid rgb(0, 0, 0, 0.4);
+}
+
+
+#chart {
+    grid-column: 2/4;
+}
+
+
+.login-titles {
+    display:inline-block;
+    margin: 0;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+@media only screen and (max-width: 1159px) {
+    .price-banner {
+        display: none;
+    }
+        .time {
+        display: none;
+    }
+    .login-div {
+        margin: 0;
+        font-size: 12px;
+        padding-left: 20px;
+        position: absolute;
+        top: 0px;
+        left: 65%;
+    }
+    .loggedin-div {
+        margin: 0;
+        font-size: 10px;
+        padding-left: 20px;
+        position: absolute;
+        top: 0px;
+        left: 65%;
+    }
+}
+
+@media only screen and (max-width: 1242px) and (min-width: 1159px) {
+    .time {
+        display: none;
+    }
+    .login-div {
+        margin: 0;
+        font-size: 10px;
+        padding-left: 20px;
+        position: absolute;
+        top: 0px;
+        left: 65%;
+    }
+    .loggedin-div {
+        margin: 0;
+        font-size: 10px;
+        padding-left: 20px;
+        position: absolute;
+        top: 0px;
+        left: 65%;
+    }
+    .price-banner {
+        display:inline-block;
+        margin: 0;
+        padding-left: 40px;
+        padding-top: 10px;
+    }
+}
+
+#top-banner-id {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0px;
+    height:44px;
+    width: 100%;
+    left: 0%;
+    background-color: rgb(25, 33, 38);
+}
+
+
+.top-top-banner {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0px;
+    left: 0%;
+    height: 100%;
+    width: 100%;
+}
+@media only screen and (min-width: 1242px) {
+    .time {
+        display:inline-block;
+        margin: 0;
+        padding-left: 40px;
+        padding-top: 10px;
+    }
+    .login-div {
+        margin: 0;
+        font-size: 12px;
+        padding-left: 20px;
+        position: absolute;
+        top: 0px;
+        left: 930px;
+    }
+    
+    .loggedin-div {
+        margin: 0;
+        font-size: 10px;
+        padding-left: 20px;
+        position: absolute;
+        top: 0px;
+        left: 920px;
+    }
+    
+    
+    .price-banner {
+        display:inline-block;
+        margin: 0;
+        padding-left: 40px;
+        padding-top: 10px;
+    }
+}
+
+.banner-titles {
+    display:inline-block;
+    margin: 0;
+    padding-left: 40px;
+    padding-top: 10px;
+}
+
+.search-for-coin-form {
+    display:inline-block;
+    padding-left: 45px;
+    padding-top: -0px;
+    margin: 0;
+    position: absolute;
+    top: 9px;
+}
+
+
+.login-but {
+    font-size:12px;
+    font-weight: bold;
+    font-family: 'Questrial', sans-serif;
+    height: 25px;
+    width: 90px;
+    color: rgba(255, 255, 255, 0.4);
+    background: none;
+    border:1px solid rgba(255, 255, 255, 0.4); 
+}
+
+.logout {
+    position: absolute;
+    left: 170px;
+    width: 120px;
+    top: 10px
+    
+}
+
+.login-but:hover {
+    color: white;
+    border-color: white;
+    cursor: pointer;
+}
+
+.login-stuff {
+    margin-left: 8px;
+    display: inline-block;
+}
+
+.login-with {
+    margin: 0;
+}
+
+.search-submit {
+    font-size:12px;
+    font-weight: bold;
+    font-family: 'Questrial', sans-serif;
+    height: 25px;
+    width: 120px;
+    color: white;
+    background: rgb(68, 190, 36);;
+    border:1px solid rgb(68, 190, 36); 
+}
+
+.search-submit:hover {
+    cursor: pointer;
+}
+
+.coin-symbol {
+    background-color: rgb(92, 101, 107);
+    border: 1px solid black;
+    height: 26px;
+    width:120px;
+    padding-left: 8px;
+    color: white;
+}
+
+.coin-contract {
+    background-color: rgb(92, 101, 107);
+    border: 1px solid black;
+    height: 26px;
+    width: 170px;
+    color: white;
+    padding-left: 8px;
+}
+
+.coin-contract::placeholder {
+    color: white;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.coin-symbol::placeholder {
+    color: white;
+    font-size: 12px;
+    font-style: italic;
+}
