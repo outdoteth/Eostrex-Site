@@ -19,14 +19,14 @@ class AccountInfo extends EventEmitter {
 			names: null,
 			currentAccount: null,
 			wallet: {
-				eosBalance: null,
-				tokenBalance: null,
+				eosBalance: "0.000",
+				tokenBalance: "0.000",
 			},
 
 			//--------- TODO: ADD THE HANDLER FOR UPDATING CONTRACT BALANCES ---------//
 			contract: {
-				eosBalance: null,
-				tokenBalance: null
+				eosBalance: "0.000",
+				tokenBalance: "0.000"
 			},
 			loginType: {
 				usingScatter: false, 
@@ -51,20 +51,20 @@ class AccountInfo extends EventEmitter {
 		this.updateBalances(selected);
 	}
 
-	//Update the balances (and orders??)
+
 	updateBalances(account) {
 		//Update wallet balance
 		eos.getTableRows({ code: "eosio.token", scope: account, table: "accounts", json: true }).then(res1 => {
 			if (res1.rows[0]) {
-				this.account.eosBalance = res1.rows[0].balance.replace(/ .*/,'');
+				this.account.wallet.eosBalance = res1.rows[0].balance.replace(/ .*/,'');
 			} else {
-				this.account.eosBalance = "0.000";
+				this.account.wallet.eosBalance = "0.000";
 			}
 			eos.getTableRows({ code: CoinInfo.coin.contract, scope: account, table: "accounts", json: true }).then(res2 => {
 				if (res2.rows[0]) {
-					this.account.tokenBalance = res2.rows[0].balance.replace(/ .*/,'');
+					this.account.wallet.tokenBalance = res2.rows[0].balance.replace(/ .*/,'');
 				} else {
-					this.account.tokenBalance = "0.000";
+					this.account.wallet.tokenBalance = "0.000";
 				}
 
 				//---------- TODO: UPDATE CONTRACT BALANCES ----------//
@@ -75,8 +75,31 @@ class AccountInfo extends EventEmitter {
 					});
 				});*/
 				this.emit("ACCOUNT_BALANCES_UPDATED");
+			}).catch(err1=>{
+				alert(`Error: The contract "${CoinInfo.coin.contract}" does not exist`);
 			});
+		}).catch(err1=>{
+			alert("Error: Could not make request to server; Try refreshing the page.");
 		});
+	}
+
+	handleDepositWithdraw(transaction) {
+		eos.transaction(
+			{
+				actions: [
+					{
+						account: transaction.code,
+						name: transaction.action,
+						authorization: [{
+						  actor: transaction.from,
+						  permission: 'active'
+						}],
+						data: transaction.data
+					}
+				]
+			}).then(res=>{
+				this.emit("DEPOSIT_WITHDRAW_MADE");
+			});
 	}
 
 	getAccount() {
@@ -99,6 +122,10 @@ class AccountInfo extends EventEmitter {
 			}
 			case "UPDATE_ACCOUNT_BALANCE": {
 				this.updateBalances(this.account.currentAccount);
+				break;
+			}
+			case "DEPOSIT_WITHDRAW": {
+				this.handleDepositWithdraw(action.data);
 				break;
 			}
 			default: {				

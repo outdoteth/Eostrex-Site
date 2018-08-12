@@ -3,24 +3,69 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Link, HashRouter } from "react-router-dom";
 
 import AccountInfo from "./AccountInfo/AccountInfo.js";
+import AccountActions from "./AccountInfo/AccountInfo.js";
 import CoinInfo from "./CoinInfo/CoinInfo.js";
+
+var transactionTemplate = {
+	code: null,
+	action: null,
+	from: null,
+	data: {}
+}
+
 
 class DepositBox extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			eosDepositAmount: 0,
+			tokenDepositAmount: 0
+		};
 
 		this.handleEosDeposit = this.handleEosDeposit.bind(this);
 		this.handleTokenDeposit = this.handleTokenDeposit.bind(this);
+		this.setEosDepositAmount = this.setEosDepositAmount.bind(this);
+		this.setTokenDepositAmount = this.setTokenDepositAmount.bind(this);
+	}
+
+	setEosDepositAmount(event) {
+		const newValue = event.target.value;
+		this.setState((prevState)=>{return({eosDepositAmount: newValue, tokenDepositAmount: prevState.tokenDepositAmount})});
+	}
+
+	setTokenDepositAmount(event) {
+		const newValue = event.target.value;
+		this.setState((prevState)=>{ return ({eosDepositAmount: prevState.eosDepositAmount, tokenDepositAmount: newValue})});
 	}
 
 
+	//-------- TODO: TEST THESE OUT ONCE SMART CONTRACT IS READY --------//
 	handleEosDeposit() {
-
+		transactionTemplate.code = "eosio.token";
+		transactionTemplate.action = "transfer";
+		transactionTemplate.from = AccountInfo.account.currentAccount;
+		transactionTemplate.data = {
+			from: transactionTemplate.from,
+			to: /* the smart contract */null,
+			quantity: this.state.eosDepositAmount + " EOS",
+			memo: 'Deposit {eosio.token} to EOStrader'
+        };
+		AccountActions.handleDepositWithdraw(transactionTemplate);
 	}
 
 	handleTokenDeposit() {
-
+		transactionTemplate.code = CoinInfo.coin.contract,
+		transactionTemplate.action = "transfer";
+		transactionTemplate.from = AccountInfo.account.currentAccount;
+		transactionTemplate.data = {
+			from: transactionTemplate.from,
+			to: /* the smart contract */null,
+			quantity: this.state.tokenDepositAmount + " " + CoinInfo.coin.symbol,
+			memo: `Deposit {${CoinInfo.coin.contract}} to EOStrader`
+        };
+		AccountActions.handleDepositWithdraw(transactionTemplate);
 	}
+	//-------- TODO: TEST THESE OUT ONCE SMART CONTRACT IS READY --------//
 
 	render() {
 		return (
@@ -30,13 +75,13 @@ class DepositBox extends React.Component {
 	                    <div onClick={this.props.handleSwitch} class="dep-with-div"><h3 class="dep-but-h3">Withdraw</h3></div>
 	                </div>
 	                <h3 class="deposit-tits dep-1">Deposit EOS</h3>
-	                <form class="dep-form">
-	                    <input placeholder="0.000 EOS" class="dep-input"></input>
+	                <form onSubmit={this.handleEosDeposit} class="dep-form">
+	                    <input onChange={this.setEosDepositAmount} placeholder="0.000 EOS" class="dep-input"></input>
 	                    <input class="dep-with-but" type="submit" value="Deposit"></input>
 	                </form> 
 	                <h3 class="deposit-tits">Deposit {CoinInfo.coin.symbol}</h3>
-	                <form class="dep-form  dep-2">
-	                    <input placeholder={"0.000 "+CoinInfo.coin.symbol} class="dep-input"></input>
+	                <form class={this.handleTokenDeposit} class="dep-form  dep-2">
+	                    <input onChange={this.setTokenDepositAmount} placeholder={"0.000 "+CoinInfo.coin.symbol} class="dep-input"></input>
 	                    <input class="dep-with-but" type="submit" value="Deposit"></input>
 	                </form>
 		        </div>
@@ -47,10 +92,27 @@ class DepositBox extends React.Component {
 class WithdrawBox extends React.Component {
 	constructor(props) {
 		super(props);
-
+		this.state = {
+			eosWithdrawAmount: 0, 
+			tokenWithdrawAmount: 0
+		}
 		this.handleEosWithdraw = this.handleEosWithdraw.bind(this);
 		this.handleTokenWithdraw = this.handleTokenWithdraw.bind(this);
+		this.setEosWithdrawAmount = this.setEosWithdrawAmount.bind(this);
+		this.setTokenWithdrawAmount = this.setTokenWithdrawAmount.bind(this);
 	}
+
+	setEosWithdrawAmount(event) {
+		const newValue = event.target.value;
+		console.log(this.state);
+		this.setState((prevState)=>{return({eosWithdrawAmount: newValue, tokenWithdrawAmount: prevState.tokenWithdrawAmount})});
+	}
+
+	setTokenWithdrawAmount(event) {
+		const newValue = event.target.value;
+		this.setState((prevState)=>{ return ({eosWithdrawAmount: prevState.eosWithdrawAmount, tokenWithdrawAmount: newValue})});
+	}
+
 
 	handleEosWithdraw() {
 
@@ -68,13 +130,13 @@ class WithdrawBox extends React.Component {
 	                    <div class="dep-with-div dep-selected"><h3 class="dep-but-h3">Withdraw</h3></div>
 	                </div>
 	                <h3 class="deposit-tits dep-1">Withdraw EOS</h3>
-	                <form class="dep-form">
-	                    <input placeholder="0.000 EOS" class="dep-input"></input>
+	                <form onSubmit={this.handleEosWithdraw} class="dep-form">
+	                    <input onChange={this.setEosWithdrawAmount} placeholder="0.000 EOS" class="dep-input"></input>
 	                    <input class="dep-with-but" type="submit" value="Withdraw"></input>
 	                </form> 
 	                <h3 class="deposit-tits">Withdraw {CoinInfo.coin.symbol}</h3>
-	                <form class="dep-form  dep-2">
-	                    <input placeholder={"0.000 "+CoinInfo.coin.symbol} class="dep-input"></input>
+	                <form onSubmit={this.handleTokenWithdraw} class="dep-form  dep-2">
+	                    <input onChange={this.setTokenWithdrawAmount} placeholder={"0.000 "+CoinInfo.coin.symbol} class="dep-input"></input>
 	                    <input class="dep-with-but" type="submit" value="Withdraw"></input>
 	                </form>
 		        </div>

@@ -21,4 +21,10 @@ export const accountUpdateBalances = function() {
 	accountDispatcher.dispatch({type: "UPDATE_ACCOUNT_BALANCE", data: null});
 }
 
+//{to, from, amount}
+export const handleDepositWithdraw = function(transaction) {
+	accountDispatcher.dispatch({type: "DEPOSIT_WITHDRAW", data: transaction});
+}
+
+
 export const scatterObject = scatter; 

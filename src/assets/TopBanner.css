@@ -7,6 +7,102 @@ body {
     color: white;
 }
 
+#buy-sell {
+    grid-column: 2/4;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.buy-form-div {
+    margin-left: 20px;
+    margin-right: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-self: start;
+}
+
+.buy-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: 5px;
+}
+
+.buy-input {
+    float: right;
+    height: 25px;
+    width: 60%;
+    margin-left: 2px;
+    color: white;
+    background-color: rgb(92, 101, 107);
+    border: 1px solid black;
+    height: 25px;
+    padding-left: 8px;
+}
+
+.buy-input::placeholder {
+    color: rgb(255, 255, 255, 0.3);
+    font-size: 12px;
+    font-style: italic;
+}
+
+.buy-form > div > button {
+    display: inline-block;
+    margin-left: 4px;
+    width: 16.5%;
+    float: right;
+    font-size: 9px;
+    font-weight: bold;
+    font-family: 'Questrial', sans-serif;
+    color: rgba(255, 255, 255, 0.4);
+    background: none;
+    border:1px solid rgba(255, 255, 255, 0.4);
+}
+
+.buy-form > div > button:hover {
+    color: white;
+    border-color: white;
+    cursor: pointer;
+}
+
+.buy-form > div > label {
+    font-size: 13px;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.buy-sell-but {
+    margin-top: 5px;
+    height: 180%;
+    
+    font-size:14px;
+    font-weight: bold;
+    font-family: 'Questrial', sans-serif;
+    color: white;
+    background-color: rgb(68, 190, 36);
+    border:1px solid rgb(68, 190, 36); 
+}
+
+.buy-sell-but-sell {
+    margin-top: 5px;
+    height: 180%;
+    
+    font-size:14px;
+    font-weight: bold;
+    font-family: 'Questrial', sans-serif;
+    color: white;
+    background-color: red;
+    border:1px solid red; 
+}
+
+
+.buy-sell-but:hover {
+    cursor: pointer;
+}
+
+.buy-token-title {
+    font-size: 15px;
+}
+
 .dep-1 {
     margin-top: 20px;
 }
@@ -162,7 +258,7 @@ body {
 }
 
 
-#chart {
+#buy-sell-target {
     grid-column: 2/4;
 }
 

@@ -9,6 +9,16 @@ import * as CoinInfoActions from "./CoinInfo/CoinInfoActions.js";
 
 import { accountDispatcher } from "./AccountInfo/AccountInfo.js";
 
+var chain = {
+    mainnet: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
+  }
+
+var eos = Eos({
+	httpEndpoint: 'https://api.eosnewyork.io:443',
+	chainId: chain.mainnet,
+	verbose: true
+});
+
 class LoginBox extends React.Component {
 	constructor(props) {
 		super(props);

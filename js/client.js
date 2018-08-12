@@ -7,6 +7,7 @@ import TopBanner from "./TopBanner.js";
 import PastTrades from "./PastTrades.js";
 import MyProfile from "./MyProfile.js";
 import MyOrders from "./MyOrders.js";
+import MakeOrder from "./MakeOrder.js";
 import Chart from "./Chart.js"
 
 import CoinInfo from "./CoinInfo/CoinInfo.js";
@@ -60,6 +61,11 @@ ReactDOM.render(	<HashRouter history={ hashHistory }>
 const myProfile = document.getElementById("profile-target");
 ReactDOM.render(	
 					<MyProfile/>, myProfile
+				)
+
+const makeOrder = document.getElementById("buy-sell-target");
+ReactDOM.render(
+					<MakeOrder/>, makeOrder
 				)
 
 /*
