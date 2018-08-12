@@ -102,6 +102,14 @@ class AccountInfo extends EventEmitter {
 			});
 	}
 
+	handleBuySell(transaction) {
+		eos.transaction(transaction).then(res=>{
+			this.emit("BUY_SELL_MADE");
+		}).catch(err=>{
+			alert(err);
+		});
+	}
+
 	getAccount() {
 		return this.account;
 	}
@@ -126,6 +134,10 @@ class AccountInfo extends EventEmitter {
 			}
 			case "DEPOSIT_WITHDRAW": {
 				this.handleDepositWithdraw(action.data);
+				break;
+			}
+			case "BUY_SELL": {
+				this.handleBuySell(action.data);
 				break;
 			}
 			default: {				

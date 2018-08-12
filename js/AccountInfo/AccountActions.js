@@ -26,5 +26,8 @@ export const handleDepositWithdraw = function(transaction) {
 	accountDispatcher.dispatch({type: "DEPOSIT_WITHDRAW", data: transaction});
 }
 
+export const handleBuySell = function(transaction, buyOrSell) {
+	accountDispatcher.dispatch({type: "BUY_SELL", data: { transaction, buyOrSell }});
+}
 
 export const scatterObject = scatter; 

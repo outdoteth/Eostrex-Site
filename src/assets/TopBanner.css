@@ -30,7 +30,7 @@ body {
 .buy-input {
     float: right;
     height: 25px;
-    width: 60%;
+    width: 67%;
     margin-left: 2px;
     color: white;
     background-color: rgb(92, 101, 107);
@@ -264,9 +264,10 @@ body {
 
 
 .login-titles {
-    display:inline-block;
+    position: absolute;
+    right: 140px;
     margin: 0;
-    padding-left: 10px;
+    padding-right: 10px;
     padding-top: 10px;
 }
 
@@ -283,7 +284,7 @@ body {
         padding-left: 20px;
         position: absolute;
         top: 0px;
-        left: 65%;
+        right: 2%;
     }
     .loggedin-div {
         margin: 0;
@@ -291,7 +292,7 @@ body {
         padding-left: 20px;
         position: absolute;
         top: 0px;
-        left: 65%;
+        right: 2%;
     }
 }
 
@@ -305,7 +306,7 @@ body {
         padding-left: 20px;
         position: absolute;
         top: 0px;
-        left: 65%;
+        right: 2%;
     }
     .loggedin-div {
         margin: 0;
@@ -313,7 +314,7 @@ body {
         padding-left: 20px;
         position: absolute;
         top: 0px;
-        left: 65%;
+        right: 2%;
     }
     .price-banner {
         display:inline-block;
@@ -357,7 +358,7 @@ body {
         padding-left: 20px;
         position: absolute;
         top: 0px;
-        left: 930px;
+        right: 2%;
     }
     
     .loggedin-div {
@@ -366,7 +367,7 @@ body {
         padding-left: 20px;
         position: absolute;
         top: 0px;
-        left: 920px;
+        right: 2%;
     }
     
     
@@ -420,10 +421,9 @@ body {
 
 .logout {
     position: absolute;
-    left: 170px;
     width: 120px;
-    top: 10px
-    
+    top: 10px;
+    right: 2%;
 }
 
 .login-but:hover {
