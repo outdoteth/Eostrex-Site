@@ -7,6 +7,89 @@ body {
     color: white;
 }
 
+.past-trade-my-order-div {
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.order-div {
+    display: inline-block;
+    height: 29px;
+    border-bottom: 1px solid white;
+}
+
+.order-div:hover {
+    cursor: pointer;
+}
+
+.past-trade-div:hover {
+    cursor: pointer;
+}
+
+.past-trade-div {
+    display: inline-block;
+    margin-left: 20px;
+    height: 29px;
+}
+
+.order-table {
+    position: relative;
+    top: 17px;
+    left: 1.5%;
+    height: calc(100%-17px);
+}
+
+
+#button-th {
+    padding-top: 4px;
+    
+    font-size: 12px;
+    font-weight: bold;
+    font-family: 'Questrial', sans-serif;
+    background-color: transparent;
+    color: #FF004E;
+    border: 1px solid #FF004E;
+}
+
+#my-orders {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#my-orders::-webkit-scrollbar {
+    background-color: transparent;
+}
+
+#button-th:hover {
+    cursor: pointer;
+    background-color: #FF004E;
+    color: white;
+}
+
+.order-table > table {
+    font-size: 12px;
+    width: 95%;
+    right: 0px;
+}
+
+th {
+    padding: 0px;
+    height: 20px;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.3);
+}
+
+
+td {
+    margin 0px;
+    padding: 0px;
+    height: 35px;
+    text-align: center;
+}
+
+#padding-th {
+    width: 15%;
+}
+
 #buy-sell {
     grid-column: 2/4;
     display: grid;
