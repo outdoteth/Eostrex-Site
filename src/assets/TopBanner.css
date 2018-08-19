@@ -1,10 +1,149 @@
-body {
+html, body {
     margin: 0;
     padding: 0;
     font-family: 'Questrial', sans-serif;
     font-size: 10px;
     font-weight: normal;
     color: white;
+    height: 100%;
+}
+
+.ababa {
+    height: 100%;
+    width: 100%;
+}
+
+.order-sell-list > div > ul {
+    list-style-type: none;
+    padding: 0;
+    
+    margin-right: 15px;
+}
+
+.order-buy-list > div > ul {
+    list-style-type: none;
+    padding: 0;
+    margin-right: 15px;
+}
+
+.order-sell-list > div > ul > li > div {
+    margin-left: 10px;
+    margin-top: 4px;
+    display: flex;
+    flex-direction: row;
+}
+
+.order-buy-list > div > ul > li > div {
+    margin-left: 10px;
+    margin-top: 4px;
+    display: flex;
+    flex-direction: row;
+}
+
+.order-sell-list > div > ul > li > div > h3 {
+    margin: 0px;
+    padding: 0px;
+}
+
+.order-buy-list > div > ul > li > div > h3 {
+    margin: 0px;
+    padding: 0px;
+}
+
+
+
+.order-sell-list > div > ul > li > div > div > h3 {
+    margin: 0px;
+    padding: 0px;
+}
+
+.order-buy-list > div > ul > li > div > div > h3 {
+    margin: 0px;
+    padding: 0px;
+}
+
+.price1 {
+    flex: 1 0px;
+    color: #FF004E;
+}
+
+.price2 {
+    flex: 1 0px;
+    color: #00DF80;
+}
+
+.amount1 {
+    flex: 1 0px;
+}
+
+.total1 {
+    flex: 1 0px;
+}
+
+.total1 > h3 {
+    float: right;
+}
+
+.order-sell-list > div {
+    
+}
+
+
+
+#order-book {
+    overflow:hidden;
+    min-height: 0;
+    min-width: 0;
+}
+
+.container2 {
+    min-height: 0;
+    min-width: 0;
+    height:100%;
+    overflow-y: hidden;
+}
+
+
+.order-sell-list {
+    height: 47.3%;
+    margin: 0;
+    font-size: 9px;
+    padding-left: 0px;
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+}
+
+.order-sell-list::-webkit-scrollbar {
+    background-color: transparent;
+}
+
+.order-buy-list {
+    height: 47.3%;
+    margin: 0;
+    font-size: 9px;
+    overflow-y: auto;
+    margin: 0;
+}
+
+.order-buy-list::-webkit-scrollbar {
+    background-color: transparent;
+}
+
+.halfway-order-book > h3 {
+    display: inline-block;
+    text-align: center;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.halfway-order-book {
+    text-align: center;
+    height: 5.4%;
+    border-top: 1px solid rgb(255, 255, 255, 0.3);;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.3);
 }
 
 .past-trade-my-order-div {
