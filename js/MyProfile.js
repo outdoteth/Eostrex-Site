@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Link, HashRouter } from "react-router-dom";
 
 import AccountInfo from "./AccountInfo/AccountInfo.js";
-import AccountActions from "./AccountInfo/AccountInfo.js";
+import * as AccountActions from "./AccountInfo/AccountActions.js";
 import CoinInfo from "./CoinInfo/CoinInfo.js";
 
 var transactionTemplate = {
@@ -30,23 +30,21 @@ class DepositBox extends React.Component {
 
 	setEosDepositAmount(event) {
 		const newValue = event.target.value;
-		this.setState((prevState)=>{return({eosDepositAmount: newValue, tokenDepositAmount: prevState.tokenDepositAmount})});
+		this.setState((prevState)=>{return({eosDepositAmount: Number(newValue).toFixed(3).toString(), tokenDepositAmount: Number(prevState.tokenDepositAmount).toFixed(3).toString()})});
 	}
 
 	setTokenDepositAmount(event) {
 		const newValue = event.target.value;
-		this.setState((prevState)=>{ return ({eosDepositAmount: prevState.eosDepositAmount, tokenDepositAmount: newValue})});
+		this.setState((prevState)=>{ return ({eosDepositAmount: Number(prevState.eosDepositAmount).toFixed(3).toString(), tokenDepositAmount: Number(newValue).toFixed(3).toString()})});
 	}
 
-
-	//-------- TODO: TEST THESE OUT ONCE SMART CONTRACT IS READY --------//
 	handleEosDeposit() {
 		transactionTemplate.code = "eosio.token";
 		transactionTemplate.action = "transfer";
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
-			from: transactionTemplate.from,
-			to: /* the smart contract */null,
+			from: AccountInfo.account.currentAccount,
+			to: "exchange",
 			quantity: this.state.eosDepositAmount + " EOS",
 			memo: 'Deposit {eosio.token} to EOStrader'
         };
@@ -58,14 +56,13 @@ class DepositBox extends React.Component {
 		transactionTemplate.action = "transfer";
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
-			from: transactionTemplate.from,
-			to: /* the smart contract */null,
+			from: AccountInfo.account.currentAccount,
+			to: "exchange",
 			quantity: this.state.tokenDepositAmount + " " + CoinInfo.coin.symbol,
 			memo: `Deposit {${CoinInfo.coin.contract}} to EOStrader`
         };
 		AccountActions.handleDepositWithdraw(transactionTemplate);
 	}
-	//-------- TODO: TEST THESE OUT ONCE SMART CONTRACT IS READY --------//
 
 	render() {
 		return (
@@ -80,7 +77,7 @@ class DepositBox extends React.Component {
 	                    <input class="dep-with-but" type="submit" value="Deposit"></input>
 	                </form> 
 	                <h3 class="deposit-tits">Deposit {CoinInfo.coin.symbol}</h3>
-	                <form class={this.handleTokenDeposit} class="dep-form  dep-2">
+	                <form onSubmit={this.handleTokenDeposit} class="dep-form  dep-2">
 	                    <input onChange={this.setTokenDepositAmount} placeholder={"0.000 "+CoinInfo.coin.symbol} class="dep-input"></input>
 	                    <input class="dep-with-but" type="submit" value="Deposit"></input>
 	                </form>
@@ -115,11 +112,28 @@ class WithdrawBox extends React.Component {
 
 
 	handleEosWithdraw() {
-
+		transactionTemplate.code = "exchange",
+		transactionTemplate.action = "makewithdraw";
+		transactionTemplate.from = AccountInfo.account.currentAccount;
+		transactionTemplate.data = {
+			withdraw_account: AccountInfo.account.currentAccount,
+			target_token_contract: "eosio.token",
+			amount_of_token: this.state.eosWithdrawAmount + " EOS"
+        };
+		AccountActions.handleDepositWithdraw(transactionTemplate);
 	}
 
 	handleTokenWithdraw() {
-		
+		console.log("8");
+		transactionTemplate.code = "exchange1",
+		transactionTemplate.action = "makewithdraw";
+		transactionTemplate.from = AccountInfo.account.currentAccount;
+		transactionTemplate.data = {
+			withdraw_account: AccountInfo.account.currentAccount,
+			target_token_contract: CoinInfo.coin.contract,
+			amount_of_token: this.state.tokenWithdrawAmount + " " + CoinInfo.coin.symbol
+		};		
+		AccountActions.handleDepositWithdraw(transactionTemplate);
 	}
 
 	render() {
@@ -188,14 +202,21 @@ export default class MyProfile extends React.Component {
 			}
 		}
 		this.setBalances = this.setBalances.bind(this);
+		this.updateBalances = this.updateBalances.bind(this);
 	}
 
 	componentWillMount() {
 		AccountInfo.on("ACCOUNT_BALANCES_UPDATED", this.setBalances);
+		AccountInfo.on("DEPOSIT_WITHDRAW_MADE", this.updateBalances);
 	}
 
 	componentWillUnmount() {
 		AccountInfo.removeListener("ACCOUNT_BALANCES_UPDATED", this.setBalances);
+		AccountInfo.removeListener("DEPOSIT_WITHDRAW_MADE", this.updateBalances);
+	}
+
+	updateBalances() {
+		AccountActions.accountUpdateBalances();
 	}
 
 	setBalances() {
@@ -203,6 +224,10 @@ export default class MyProfile extends React.Component {
 			wallet: {
 				eosBalance: AccountInfo.account.wallet.eosBalance,
 				tokenBalance: AccountInfo.account.wallet.tokenBalance
+			},
+			contract: {
+				eosBalance: AccountInfo.account.contract.eosBalance,
+				tokenBalance: AccountInfo.account.contract.tokenBalance
 			}
 		})
 	}

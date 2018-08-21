@@ -3,14 +3,22 @@ import { Dispatcher  } from "flux";
 import CoinInfo from "../CoinInfo/CoinInfo.js";
 
 var chain = {
-    mainnet: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
+    mainnet: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
   }
 
 var eos = Eos({
-	httpEndpoint: 'https://api.eosnewyork.io:443',
-	chainId: chain.mainnet,
+	httpEndpoint: 'http://127.0.0.1:8888',
+	chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
 	verbose: true
 })
+
+const network = {
+    protocol:'http', // Defaults to https
+    blockchain:'eos',
+    host:'127.0.0.1', // ( or null if endorsed chainId )
+    port:8888, // ( or null if defaulting to 80 )
+    chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
+}
 
 class AccountInfo extends EventEmitter {
 	constructor() {
@@ -31,18 +39,21 @@ class AccountInfo extends EventEmitter {
 			loginType: {
 				usingScatter: false, 
 				usingPkey: false
-			}
+			},
 		};
+		this.scatter = null;
 		this.foundScatter = false;
 	}
 
-	scatterLoaded() {
+	scatterLoaded(scatter) {
 		this.foundScatter = true;
+		this.scatter = scatter;
 		this.emit("SCATTER_LOADED");
 	}
 
 	scatterLogin(scatterAccount) {
 		this.account.names = scatterAccount.accounts;
+		eos = this.scatter.eos( network, Eos, {}, 'http' );
 		this.emit("SCATTER_LOGIN", this.account.names);
 	}
 
@@ -68,13 +79,21 @@ class AccountInfo extends EventEmitter {
 				}
 
 				//---------- TODO: UPDATE CONTRACT BALANCES ----------//
-				/*eos.getTableRows({}).then(res3=>{
-					///Update contract balance
-					eos.getTableRows({}).then(res4=>{
-						///Update contract balance
-					});
-				});*/
-				this.emit("ACCOUNT_BALANCES_UPDATED");
+				eos.getTableRows({ code: "exchange", scope: account, table: "accounts", json: true }).then(res3=>{
+					let encodedEosContract = Eos.modules.format.encodeName("eosio.token", false);
+					let encodedTokenContract = Eos.modules.format.encodeName(CoinInfo.coin.contract, false);
+					for (var i = 0; i < res3.rows.length; i++) {
+						if (res3.rows[i].token_contract == encodedTokenContract) {
+							this.account.contract.tokenBalance = res3.rows[i].balance.replace(/ .*/,'');
+						}
+						if (res3.rows[i].token_contract == encodedEosContract) {
+							this.account.contract.eosBalance = res3.rows[i].balance.replace(/ .*/,'');
+						}
+					}
+					this.emit("ACCOUNT_BALANCES_UPDATED");
+				}).catch(err1=>{
+					alert("Error: Could not find the exchange contract");
+				});
 			}).catch(err1=>{
 				alert(`Error: The contract "${CoinInfo.coin.contract}" does not exist`);
 			});
@@ -97,9 +116,13 @@ class AccountInfo extends EventEmitter {
 						data: transaction.data
 					}
 				]
-			}).then(res=>{
-				this.emit("DEPOSIT_WITHDRAW_MADE");
-			});
+		}).catch(err=>{
+			console.log(err);
+			alert("Deposit Error");
+		}).then(res=>{
+			console.log(res);
+			this.emit("DEPOSIT_WITHDRAW_MADE");
+		});
 	}
 
 	handleBuySell(transaction) {
