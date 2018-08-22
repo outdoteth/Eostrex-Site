@@ -22,12 +22,8 @@ export const accountUpdateBalances = function() {
 }
 
 //{to, from, amount}
-export const handleDepositWithdraw = function(transaction) {
-	accountDispatcher.dispatch({type: "DEPOSIT_WITHDRAW", data: transaction});
-}
-
-export const handleBuySell = function(transaction, buyOrSell) {
-	accountDispatcher.dispatch({type: "BUY_SELL", data: { transaction, buyOrSell }});
+export const handleTransaction = function(transaction) {
+	accountDispatcher.dispatch({type: "TRANSACTION", data: transaction});
 }
 
 export const scatterObject = scatter; 

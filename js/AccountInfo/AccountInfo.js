@@ -31,7 +31,6 @@ class AccountInfo extends EventEmitter {
 				tokenBalance: "0.000",
 			},
 
-			//--------- TODO: ADD THE HANDLER FOR UPDATING CONTRACT BALANCES ---------//
 			contract: {
 				eosBalance: "0.000",
 				tokenBalance: "0.000"
@@ -77,22 +76,31 @@ class AccountInfo extends EventEmitter {
 				} else {
 					this.account.wallet.tokenBalance = "0.000";
 				}
-
-				//---------- TODO: UPDATE CONTRACT BALANCES ----------//
-				eos.getTableRows({ code: "exchange", scope: account, table: "accounts", json: true }).then(res3=>{
+				//Update contract balance
+				eos.getTableRows({ code: "exchangea", scope: account, table: "accounts", json: true }).then(res3=>{
 					let encodedEosContract = Eos.modules.format.encodeName("eosio.token", false);
 					let encodedTokenContract = Eos.modules.format.encodeName(CoinInfo.coin.contract, false);
+					let foundTBalance = false;
+					let foundEBalance = false;
 					for (var i = 0; i < res3.rows.length; i++) {
 						if (res3.rows[i].token_contract == encodedTokenContract) {
 							this.account.contract.tokenBalance = res3.rows[i].balance.replace(/ .*/,'');
+							foundTBalance = true;
 						}
 						if (res3.rows[i].token_contract == encodedEosContract) {
 							this.account.contract.eosBalance = res3.rows[i].balance.replace(/ .*/,'');
+							foundEBalance = true;
 						}
+					}
+					if (!foundEBalance) {
+						this.account.contract.eosBalance = "0.000";
+					}
+					if (!foundTBalance) {
+						this.account.contract.tokenBalance = "0.000";
 					}
 					this.emit("ACCOUNT_BALANCES_UPDATED");
 				}).catch(err1=>{
-					alert("Error: Could not find the exchange contract");
+
 				});
 			}).catch(err1=>{
 				alert(`Error: The contract "${CoinInfo.coin.contract}" does not exist`);
@@ -102,7 +110,7 @@ class AccountInfo extends EventEmitter {
 		});
 	}
 
-	handleDepositWithdraw(transaction) {
+	handleTransaction(transaction) {
 		eos.transaction(
 			{
 				actions: [
@@ -118,18 +126,10 @@ class AccountInfo extends EventEmitter {
 				]
 		}).catch(err=>{
 			console.log(err);
-			alert("Deposit Error");
+			alert("Transaction Error");
 		}).then(res=>{
 			console.log(res);
-			this.emit("DEPOSIT_WITHDRAW_MADE");
-		});
-	}
-
-	handleBuySell(transaction) {
-		eos.transaction(transaction).then(res=>{
-			this.emit("BUY_SELL_MADE");
-		}).catch(err=>{
-			alert(err);
+			this.emit("TRANSACTION_MADE");
 		});
 	}
 
@@ -155,12 +155,8 @@ class AccountInfo extends EventEmitter {
 				this.updateBalances(this.account.currentAccount);
 				break;
 			}
-			case "DEPOSIT_WITHDRAW": {
-				this.handleDepositWithdraw(action.data);
-				break;
-			}
-			case "BUY_SELL": {
-				this.handleBuySell(action.data);
+			case "TRANSACTION": {
+				this.handleTransaction(action.data);
 				break;
 			}
 			default: {				
@@ -175,5 +171,6 @@ const accountInfo = new AccountInfo();
 var	dispatcher = new Dispatcher();
 const accountToken = dispatcher.register(accountInfo.handleActions.bind(accountInfo));
 
+export const eosRef = eos;
 export const accountDispatcher = dispatcher;
 export default accountInfo;

@@ -1,6 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Link, HashRouter } from "react-router-dom";
+import MyOrderInfo from "./MyOrderInfo/MyOrderInfo.js";
+import * as MyOrderActions from "./MyOrderInfo/MyOrderActions.js";
+import AccountInfo from "./AccountInfo/AccountInfo.js";
 
 class Table extends React.Component {
 	constructor() {
@@ -13,9 +16,16 @@ class Table extends React.Component {
 		this.queryOrders = this.queryOrders.bind(this);
 	}
 
-	/*Queries the orders of the AccountInfo.account.accountSelected*/
+	componentWillMount() {
+		AccountInfo.on("ACCOUNT_BALANCES_UPDATED", this.queryOrders);
+	}
+
+	componentWillUnmount() {
+		AccountInfo.removeListener("ACCOUNT_BALANCES_UPDATED", this.queryOrders);
+	}
+
 	queryOrders() {
-		/*Send an action to AccountActions handler*/
+		MyOrderActions.getMyOrders();
 	}
 
 	render() {

@@ -316,6 +316,9 @@ td {
     border:1px solid red; 
 }
 
+.buy-sell-but-sell:hover {
+    cursor: pointer;
+}
 
 .buy-sell-but:hover {
     cursor: pointer;

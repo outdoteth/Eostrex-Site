@@ -11,7 +11,7 @@ class BuyBox extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			priceSetter: 0,
+			priceSetter: null,
 			amountSetter: null,
 			totalSetter: null
 		}
@@ -20,13 +20,14 @@ class BuyBox extends React.Component {
 		this.handleAmountChange = this.handleAmountChange.bind(this);
 		this.handleTotalChange = this.handleTotalChange.bind(this);
 		this.handlePercentageClick = this.handlePercentageClick.bind(this);
+		this.handleBuyTx = this.handleBuyTx.bind(this);
 	}
 
 	handlePriceChange(event) {
 		const newValue = event.target.value;
 		this.setState((prevState)=>{return({	priceSetter: newValue, 
 												amountSetter: prevState.amountSetter,
-												totalSetter: newValue * prevState.amountSetter
+												totalSetter: prevState.amountSetter ? (newValue * prevState.amountSetter).toFixed(3) : (0).toFixed(3)
 											})});
 	}
 
@@ -34,14 +35,14 @@ class BuyBox extends React.Component {
 		const newValue = event.target.value;
 		this.setState((prevState)=>{return({	priceSetter: prevState.priceSetter, 
 												amountSetter: newValue,
-												totalSetter: newValue * prevState.priceSetter
+												totalSetter: (newValue * prevState.priceSetter).toFixed(3)
 											})});
 	}
 
 	handleTotalChange(event) {
 		const newValue = event.target.value;
 		this.setState((prevState)=>{return({	priceSetter: prevState.priceSetter, 
-												amountSetter: newValue / prevState.priceSetter,
+												amountSetter: (newValue / prevState.priceSetter).toFixed(3),
 												totalSetter: newValue
 											})});
 	}
@@ -51,8 +52,8 @@ class BuyBox extends React.Component {
 		this.setState((prevState)=>{
 			return({
 					priceSetter: prevState.priceSetter,
-					amountSetter: ((percentage * AccountInfo.account.wallet.eosBalance) / prevState.priceSetter).toFixed(4),
-					totalSetter: (AccountInfo.account.wallet.tokenBalance * percentage).toFixed(4)
+					amountSetter: ((percentage * AccountInfo.account.contract.eosBalance) / prevState.priceSetter).toFixed(3),
+					totalSetter: (AccountInfo.account.contract.eosBalance * percentage).toFixed(3)
 				})
 		});
 		console.log(this.state);
@@ -60,26 +61,25 @@ class BuyBox extends React.Component {
 
 	handleBuyTx() {
 		const buyTx = {
-			actions: [
-					{
-						account: /* the smart contract */null,
-						name: /* the smart contract makeorder action */null,
-						authorization: [{
-						  actor: AccountInfo.account.currentAccount,
-						  permission: 'active'
-						}],
-						data: /*the data needed to make the order */null
-					}
-				]
+			code: "exchangea",
+			action: "makeorder",
+			from: AccountInfo.account.currentAccount,
+			data: {
+				maker_account: AccountInfo.account.currentAccount,
+				target_token_contract: CoinInfo.coin.contract,
+				amount_of_token: parseFloat(this.state.amountSetter).toFixed(3) + " " + CoinInfo.coin.symbol,
+				buy_or_sell: 1,
+				price: parseFloat(this.state.priceSetter).toFixed(8)
+			}
 		}
-		AccountActions.handleBuySell()
+		AccountActions.handleTransaction(buyTx);
 	}
 
 	render() {
 		return (
 				<div class="buy-form-div">
 		                <div><h3 class="buy-token-title">Buy {CoinInfo.coin.symbol}</h3></div>
-		                <form class="buy-form">
+		                <form class="buy-form" onSubmit={this.handleBuyTx}>
 		                    <div><label>Price:</label><input onChange={this.handlePriceChange} placeholder={"0.000 EOS/" + CoinInfo.coin.symbol} class="buy-input"type="text"></input></div>
 		                    <div><label>Amount:</label><input onChange={this.handleAmountChange} value={this.state.amountSetter} type="text" placeholder={"0.000 " + CoinInfo.coin.symbol} class="buy-input"></input></div>
 		                    <div>
@@ -100,7 +100,7 @@ class SellBox extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			priceSetter: 0,
+			priceSetter: null,
 			amountSetter: null,
 			totalSetter: null
 		}
@@ -109,13 +109,14 @@ class SellBox extends React.Component {
 		this.handleAmountChange = this.handleAmountChange.bind(this);
 		this.handleTotalChange = this.handleTotalChange.bind(this);
 		this.handlePercentageClick = this.handlePercentageClick.bind(this);
+		this.handleSellTx = this.handleSellTx.bind(this);
 	}
 
 	handlePriceChange(event) {
 		const newValue = event.target.value;
 		this.setState((prevState)=>{return({	priceSetter: newValue, 
 												amountSetter: prevState.amountSetter,
-												totalSetter: newValue * prevState.amountSetter
+												totalSetter: prevState.amountSetter ? (newValue * prevState.amountSetter).toFixed(3) : (0).toFixed(3)
 											})});
 	}
 
@@ -123,14 +124,14 @@ class SellBox extends React.Component {
 		const newValue = event.target.value;
 		this.setState((prevState)=>{return({	priceSetter: prevState.priceSetter, 
 												amountSetter: newValue,
-												totalSetter: newValue * prevState.priceSetter
+												totalSetter: (newValue * prevState.priceSetter).toFixed(3)
 											})});
 	}
 
 	handleTotalChange(event) {
 		const newValue = event.target.value;
 		this.setState((prevState)=>{return({	priceSetter: prevState.priceSetter, 
-												amountSetter: newValue * prevState.priceSetter,
+												amountSetter: (newValue * prevState.priceSetter).toFixed(3),
 												totalSetter: newValue
 											})});
 	}
@@ -140,28 +141,27 @@ class SellBox extends React.Component {
 		this.setState((prevState)=>{
 			return({
 					priceSetter: prevState.priceSetter,
-					amountSetter: (AccountInfo.account.wallet.tokenBalance * percentage).toFixed(4),
-					totalSetter: ((percentage * AccountInfo.account.wallet.tokenBalance) * prevState.priceSetter).toFixed(4)
+					amountSetter: (AccountInfo.account.contract.tokenBalance * percentage).toFixed(3),
+					totalSetter: ((percentage * AccountInfo.account.contract.tokenBalance) * prevState.priceSetter).toFixed(3)
 				})
 		});
 		console.log(this.state);
 	}
 
-	handleBuyTx() {
-		const buyTx = {
-			actions: [
-					{
-						account: /* the smart contract */null,
-						name: /* the smart contract makeorder action */null,
-						authorization: [{
-						  actor: AccountInfo.account.currentAccount,
-						  permission: 'active'
-						}],
-						data: /*the data needed to make the order */null
-					}
-				]
+	handleSellTx() {
+		const sellTx = {
+			code: "exchangea",
+			action: "makeorder",
+			from: AccountInfo.account.currentAccount,
+			data: {
+				maker_account: AccountInfo.account.currentAccount,
+				target_token_contract: CoinInfo.coin.contract,
+				amount_of_token: parseFloat(this.state.amountSetter).toFixed(3) + " " + CoinInfo.coin.symbol,
+				buy_or_sell: 0,
+				price: parseFloat(this.state.priceSetter).toFixed(8)
+			}
 		}
-		AccountActions.handleBuySell()
+		AccountActions.handleTransaction(sellTx);
 	}
 
 	render() {
@@ -169,7 +169,7 @@ class SellBox extends React.Component {
 				<div id="sell-form-form">
 	                <div class="buy-form-div">
 	                	<div><h3 class="buy-token-title">Sell {CoinInfo.coin.symbol}</h3></div>
-		                <form class="buy-form">
+		                <form class="buy-form" onSubmit={this.handleSellTx}>
 		                    <div><label>Price:</label><input onChange={this.handlePriceChange} placeholder={"0.000 EOS/"+CoinInfo.coin.symbol} class="buy-input"type="text"></input></div>
 		                    <div><label>Amount:</label><input onChange={this.handleAmountChange} value={this.state.amountSetter} type="text" placeholder={"0.000 " + CoinInfo.coin.symbol} class="buy-input"></input></div>
 		                    <div>

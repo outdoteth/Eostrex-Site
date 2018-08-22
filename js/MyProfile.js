@@ -44,11 +44,11 @@ class DepositBox extends React.Component {
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
 			from: AccountInfo.account.currentAccount,
-			to: "exchange",
+			to: "exchangea",
 			quantity: this.state.eosDepositAmount + " EOS",
 			memo: 'Deposit {eosio.token} to EOStrader'
         };
-		AccountActions.handleDepositWithdraw(transactionTemplate);
+		AccountActions.handleTransaction(transactionTemplate);
 	}
 
 	handleTokenDeposit() {
@@ -57,11 +57,11 @@ class DepositBox extends React.Component {
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
 			from: AccountInfo.account.currentAccount,
-			to: "exchange",
+			to: "exchangea",
 			quantity: this.state.tokenDepositAmount + " " + CoinInfo.coin.symbol,
 			memo: `Deposit {${CoinInfo.coin.contract}} to EOStrader`
         };
-		AccountActions.handleDepositWithdraw(transactionTemplate);
+		AccountActions.handleTransaction(transactionTemplate);
 	}
 
 	render() {
@@ -101,18 +101,16 @@ class WithdrawBox extends React.Component {
 
 	setEosWithdrawAmount(event) {
 		const newValue = event.target.value;
-		console.log(this.state);
-		this.setState((prevState)=>{return({eosWithdrawAmount: newValue, tokenWithdrawAmount: prevState.tokenWithdrawAmount})});
+		this.setState((prevState)=>{return({eosWithdrawAmount: Number(newValue).toFixed(3).toString(), tokenWithdrawAmount: Number(prevState.tokenWithdrawAmount).toFixed(3).toString()})});
 	}
 
 	setTokenWithdrawAmount(event) {
 		const newValue = event.target.value;
-		this.setState((prevState)=>{ return ({eosWithdrawAmount: prevState.eosWithdrawAmount, tokenWithdrawAmount: newValue})});
+		this.setState((prevState)=>{ return ({eosWithdrawAmount: Number(prevState.eosWithdrawAmount).toFixed(3).toString(), tokenWithdrawAmount: Number(newValue).toFixed(3).toString()})});
 	}
 
-
 	handleEosWithdraw() {
-		transactionTemplate.code = "exchange",
+		transactionTemplate.code = "exchangea",
 		transactionTemplate.action = "makewithdraw";
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
@@ -120,12 +118,11 @@ class WithdrawBox extends React.Component {
 			target_token_contract: "eosio.token",
 			amount_of_token: this.state.eosWithdrawAmount + " EOS"
         };
-		AccountActions.handleDepositWithdraw(transactionTemplate);
+		AccountActions.handleTransaction(transactionTemplate);
 	}
 
 	handleTokenWithdraw() {
-		console.log("8");
-		transactionTemplate.code = "exchange1",
+		transactionTemplate.code = "exchangea",
 		transactionTemplate.action = "makewithdraw";
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
@@ -133,7 +130,7 @@ class WithdrawBox extends React.Component {
 			target_token_contract: CoinInfo.coin.contract,
 			amount_of_token: this.state.tokenWithdrawAmount + " " + CoinInfo.coin.symbol
 		};		
-		AccountActions.handleDepositWithdraw(transactionTemplate);
+		AccountActions.handleTransaction(transactionTemplate);
 	}
 
 	render() {
@@ -207,12 +204,12 @@ export default class MyProfile extends React.Component {
 
 	componentWillMount() {
 		AccountInfo.on("ACCOUNT_BALANCES_UPDATED", this.setBalances);
-		AccountInfo.on("DEPOSIT_WITHDRAW_MADE", this.updateBalances);
+		AccountInfo.on("TRANSACTION_MADE", this.updateBalances);
 	}
 
 	componentWillUnmount() {
 		AccountInfo.removeListener("ACCOUNT_BALANCES_UPDATED", this.setBalances);
-		AccountInfo.removeListener("DEPOSIT_WITHDRAW_MADE", this.updateBalances);
+		AccountInfo.removeListener("TRANSACTION_MADE", this.updateBalances);
 	}
 
 	updateBalances() {
