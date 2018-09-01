@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Link, HashRouter, hashHistory } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, HashRouter, hashHistory, Redirect, Switch } from "react-router-dom";
 
 import OrderBook from "./OrderBook.js";
 import TopBanner from "./TopBanner.js";
@@ -52,11 +52,16 @@ class WholePage extends React.Component {
 }
 
 const topBanner = document.getElementById("top-banner-id");
-ReactDOM.render(	<HashRouter history={ hashHistory }>
-						<div>
-							<Route path="/trade/:contract/:symbol" component={ WholePage }/>
-						</div>
-					</HashRouter>, topBanner);
+ReactDOM.render(	
+					<div>
+						<HashRouter history={ hashHistory }>
+							<Switch>
+								<Route path="/trade/:contract/:symbol" component={ WholePage }/>
+								<Redirect exact from="/" to="/trade/gem/GEM" />
+							</Switch>
+						</HashRouter>
+					</div>
+					, topBanner);
 
 const myProfile = document.getElementById("profile-target");
 ReactDOM.render(	
