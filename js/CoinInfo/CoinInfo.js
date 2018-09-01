@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import { Dispatcher  } from "flux";
 
 import * as AccountActions from "../AccountInfo/AccountActions.js";
+import { Socket } from "../socket/socket.js";
 
 class CoinInfo extends EventEmitter {
 	constructor() {
@@ -20,6 +21,7 @@ class CoinInfo extends EventEmitter {
 		AccountActions.accountUpdateBalances();
 		console.log(this.coin);
 		this.emit("NEW_COIN_SET");
+		Socket.emit('order-request', this.coin.contract);
 	}
 
 	handleActions(action) {

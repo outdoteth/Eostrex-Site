@@ -82,6 +82,8 @@ const orderBook = document.getElementById("order-book");
 ReactDOM.render(
 					<OrderBook/>, orderBook
 				)
+
+
 /*
 const orderBook = document.getElementById("order-book");
 ReactDOM.render(<OrderBook/>, topBanner);

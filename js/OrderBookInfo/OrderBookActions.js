@@ -1,8 +1,7 @@
 import { orderBookDispatcher } from "./OrderBookInfo.js";
+import { Socket } from "../socket/socket.js";
 
-var socket = io();
-socket.emit('order-request', "gem");
-socket.on("orders-sent", (res) => {
+Socket.on("orders-sent", (res) => {
 	updateOrders(res);
 });
 
