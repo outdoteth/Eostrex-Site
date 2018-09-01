@@ -26,7 +26,6 @@ const url = 'mongodb://localhost:27017';
 const dbName = 'EOS';
 let db = null;
 
-// Use connect method to connect to the server
 MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
 	console.log("Connected successfully to server");
 	db = client.db(dbName);
@@ -35,12 +34,14 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
 	const takeOrderCursor = collection.watch([{$match: {"fullDocument.act.name": "takeorder"}}]);
 	takeOrderCursor.on("change", ( change ) => {
 		const token_contract = change.fullDocument.act.data.target_token_contract;
-		db.listCollections({name: token_contract}).next(function(err, collref) {
+		db.listCollections({name: "cachedtrades" + token_contract}).next(function(err, collref) {
 			if (!collref) {
-				db.createCollection("cachedorders" + token_contract);
+				db.createCollection("cachedtrades" + token_contract);
 			}
 		});
-	})
+		const cachedTrades = db.collection("cachedtrades" + token_contract);
+		cachedTrades.insertOne({data: change.fullDocument.act.data, timestamp: change.fullDocument.createdAt});
+	});
 });
 
 let sessions = []; //Array of contracts that are currently being polled
