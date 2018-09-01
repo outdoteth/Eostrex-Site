@@ -8,8 +8,30 @@ html, body {
     height: 100%;
 }
 
+.order-container {
+    height: 27px;
+    margin: 0px;
+    padding: 0px;
+    border-bottom: solid 1px rgb(255, 255, 255, 0.3);
+    display: flex;
+}
+
+.order-container > h3 {
+    margin: 0;
+    padding-top: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 0;
+    font-size: 12px;
+}
+
+.order-container > h3:hover {
+    background-color: rgb(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
 .ababa {
-    height: 100%;
+    height: calc(100% - 30px);
     width: 100%;
 }
 
@@ -84,7 +106,9 @@ html, body {
     float: right;
 }
 
-
+.order-book-selected {
+    background-color: rgb(255, 255, 255, 0.2);
+}
 
 #order-book {
     overflow:hidden;
@@ -114,7 +138,46 @@ html, body {
     background-color: transparent;
 }
 
+.past-trades-div {
+    height: calc(100% - 27px);
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
 
+.past-trades-ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+    padding-top:10px;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.past-trade-div-single {
+    height: 20px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.past-trade-div-single > h3 {
+    font-size: 11px;
+    align-self: center;
+    text-align: center;
+    display:inline-block;
+    margin: 0px;
+    padding: 0px;
+}
+
+.past-trades-ul::-webkit-scrollbar {
+    width: 0px;
+    background-color: transparent;
+}
 
 
 .order-buy-list {
@@ -134,7 +197,7 @@ html, body {
     text-align: center;
     margin-right: 10px;
     margin-left: 10px;
-    margin-top: 5px;
+    margin-top: 4px;
     margin-bottom: 5px;
 }
 

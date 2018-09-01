@@ -30,6 +30,17 @@ let db = null;
 MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
 	console.log("Connected successfully to server");
 	db = client.db(dbName);
+
+	const collection = db.collection("action_traces");
+	const takeOrderCursor = collection.watch([{$match: {"fullDocument.act.name": "takeorder"}}]);
+	takeOrderCursor.on("change", ( change ) => {
+		const token_contract = change.fullDocument.act.data.target_token_contract;
+		db.listCollections({name: token_contract}).next(function(err, collref) {
+			if (!collref) {
+				db.createCollection("cachedorders" + token_contract);
+			}
+		});
+	})
 });
 
 let sessions = []; //Array of contracts that are currently being polled
@@ -40,9 +51,11 @@ app.get("/getorders/:contract", (req, res) => {
 
 
 io.on( 'connection', function(socket) {
-	let changeStreamCursor;
+	let cachedOrdersCursor;
 	let initiatedPoll = false;
 	let contractInitiated;
+
+	let cachedTradesCursor;
 	
 	socket.on("disconnect", () => {
 		console.log("User disconnected");
@@ -56,8 +69,8 @@ io.on( 'connection', function(socket) {
     				}
 				}
 			});
-			console.log("Here are the sessions: " + sessions)
 		}
+		cachedOrdersCursor.close();
 	});
 
 	socket.on("order-request", ( contract ) => {
@@ -73,8 +86,8 @@ io.on( 'connection', function(socket) {
 			initiatedPoll = true;
 			contractInitiated = contract;
 		}
-		changeStreamCursor = db.collection(`${contract}cachedorders`).watch({});
-		changeStreamCursor.on("change", function() {
+		cachedOrdersCursor = db.collection(`${contract}cachedorders`).watch({});
+		cachedOrdersCursor.on("change", function() {
 			db.collection(`${contract}cachedorders`).find({}).toArray((err, doc)=> {
 				socket.emit("orders-sent", doc);
 			});
@@ -82,6 +95,9 @@ io.on( 'connection', function(socket) {
 		db.collection(`${contract}cachedorders`).find({}).toArray((err, doc)=> {
 			socket.emit("orders-sent", doc);
 		});
+	});
+
+	socket.on("trade-request", ( contract ) => {
 	});
 });
 
@@ -118,7 +134,7 @@ function startOrderPoll( contract ) {
 								}
 							});
 							buyOrders.sort((a, b) => { return b.price - a.price}).splice(100);
-							sellOrders.sort((a, b) => { return a.price - b.price}).splice(100);
+							sellOrders.sort((a, b) => { return b.price - a.price}).splice(100);
 							db.collection(`${contract}cachedorders`).count().then( count => {
 								if ( count === 0 ) {
 									db.createCollection(`${contract}cachedorders`);

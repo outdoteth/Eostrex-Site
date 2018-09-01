@@ -3,6 +3,7 @@ import { Socket } from "../socket/socket.js";
 
 Socket.on("orders-sent", (res) => {
 	updateOrders(res);
+	console.log("HELLOOO");
 });
 
 export const updateOrders = function(data) {
