@@ -4,15 +4,6 @@ import { BrowserRouter as Router, Route, Link, HashRouter } from "react-router-d
 import OrderBookInfo from "./OrderBookInfo/OrderBookInfo.js";
 import * as OrderBookActions from "./OrderBookInfo/OrderBookActions.js";
 
-
-		amount_of_token:"0.001 GEM"
-		buy_or_sell:1
-		expiration_date:1535519001
-		maker_account:"eosio"
-		order_id:108
-		price:"0.00009999999747379"
-		target_token_contract:"7107806111897485312"
-
 class BuyOrderLi extends React.Component {
 	constructor(props) {
 		super(props);
@@ -35,7 +26,7 @@ class BuyOrderLi extends React.Component {
 	                    <h3 class="price2">{this.state.price}</h3>
 	                    <h3 class="amount1">{this.state.amount_of_token}</h3>
 	                    <div class="total1">
-	                        <h3>{this.state.amount_of_token * this.state.price}</h3>
+	                        <h3>{(this.state.amount_of_token * this.state.price).toFixed(4)}</h3>
 	                    </div>
 	                </div>
 	            </li>
@@ -47,8 +38,6 @@ class SellOrderLi extends React.Component {
 	constructor(props) {
 		super(props);
 
-		/* 	TODO: Set the state to hold the order;
-			price, amount, total, orderId */
 	}
 
 	render() {
@@ -74,7 +63,10 @@ export default class OrderBook extends React.Component {
 		super(props);
 
 		this.setOrders = this.setOrders.bind(this);
-		this.state = {}
+		this.state = {
+			buyOrders: [],
+			sellOrders: []
+		}
 	}
 
 	componentWillMount() {
@@ -82,13 +74,16 @@ export default class OrderBook extends React.Component {
 	}
 
 	setOrders() {
-
+		this.setState({
+			buyOrders: OrderBookInfo.buyOrders,
+			sellOrders: OrderBookInfo.sellOrders
+		});
 	}
 
 	render() {
-		const buyOrders = OrderBookInfo.buyOrders.forEach( (order) => {
-			console.log(order);
-		});
+		const buyOrders = this.state.buyOrders.map( (order) =>
+			<BuyOrderLi price={parseFloat(order.price).toFixed(7)} amount_of_token={order.amount_of_token.replace(/ .*/,'')}/>
+		);
 		const sellOrders = /*for loop to go through <SellOrderLi>*/null;
 		return(
 				<div class="ababa">
@@ -138,23 +133,8 @@ export default class OrderBook extends React.Component {
 			            <div class="order-buy-list">
 		                    <div>
 		                        <ul>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
-		                        	<BuyOrderLi price="1.23" amount_of_token="1233"/>
+		                        	{buyOrders}
+		                        	{buyOrders}
 		                    	</ul>
 		                    </div>
 			            </div>
