@@ -22,6 +22,7 @@ class CoinInfo extends EventEmitter {
 		console.log(this.coin);
 		this.emit("NEW_COIN_SET");
 		Socket.emit('order-request', this.coin.contract);
+		Socket.emit("trade-request", this.coin.contract);
 	}
 
 	handleActions(action) {

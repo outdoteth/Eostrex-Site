@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Route, Link, HashRouter } from "react-router-d
 import OrderBookInfo from "./OrderBookInfo/OrderBookInfo.js";
 import * as OrderBookActions from "./OrderBookInfo/OrderBookActions.js";
 
+import PastTradeInfo from "./PastTradeInfo/PastTradeInfo.js";
+import * as PastTradeActions from "./PastTradeInfo/PastTradeActions.js";
+
 class BuyOrderLi extends React.Component {
 	constructor(props) {
 		super(props);
@@ -144,18 +147,25 @@ class PastTradeLi extends React.Component {
 class PastTrades extends React.Component {
 	constructor() {
 		super();
+		this.state = {
+			trades: []
+		}
 		this.updateTrades = this.updateTrades.bind(this);
 	}
 
 	componentWillMount() {
-		OrderBookInfo.on("TRADES_UPDATED", this.updateTrades);
+		PastTradeInfo.on("CACHED_TRADES_UPDATED", this.updateTrades);
 	}
 
 	updateTrades() {
-
+		this.setState({
+			trades: PastTradeInfo.cachedTrades
+		})
 	}
 
 	render() {
+		//const trades = this.state.trades.map((trade) => 
+		//);
 		return(
 				<div class="past-trades-div">
 	                <ul class="past-trades-ul">
@@ -167,7 +177,7 @@ class PastTrades extends React.Component {
 	}
 }
 
-export default  class OrdersAndTrades extends React.Component {
+export default class OrdersAndTrades extends React.Component {
 	constructor() {
 		super();
 		this.state = {

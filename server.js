@@ -116,7 +116,9 @@ io.on( 'connection', function(socket) {
 	});
 
 	socket.on("trade-request", ( contract ) => {
-
+		db.collection("cachedtrades" + contract).find({}).toArray((err, doc) => {
+			socket.emit("trades-sent", doc);
+		});
 	});
 });
 

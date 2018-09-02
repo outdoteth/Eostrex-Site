@@ -1,6 +1,5 @@
 import { EventEmitter } from "events";
 import { Dispatcher  } from "flux";
-import CoinInfo from "../CoinInfo/CoinInfo.js";
 
 class OrderBookInfo extends EventEmitter {
 	constructor() {
