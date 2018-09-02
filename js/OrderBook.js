@@ -110,7 +110,6 @@ class OrderBook extends React.Component {
 	                    <div>
 	                        <ul>
 	                        	{buyOrders}
-	                        	{buyOrders}
 	                    	</ul>
 	                    </div>
 		            </div>
@@ -153,7 +152,7 @@ class PastTrades extends React.Component {
 	}
 
 	updateTrades() {
-		
+
 	}
 
 	render() {

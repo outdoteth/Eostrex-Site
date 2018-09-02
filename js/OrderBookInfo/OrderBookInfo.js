@@ -13,6 +13,7 @@ class OrderBookInfo extends EventEmitter {
 		this.buyOrders = orders[0].buyOrders;
 		this.sellOrders = orders[0].sellOrders;
 		this.emit("ORDERS_UPDATED");
+		console.log(this.sellOrders);
 	}
 
 	handleActions(action) {

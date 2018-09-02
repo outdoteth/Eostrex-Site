@@ -44,7 +44,7 @@ class DepositBox extends React.Component {
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
 			from: AccountInfo.account.currentAccount,
-			to: "exchangea",
+			to: "exchangeb",
 			quantity: this.state.eosDepositAmount + " EOS",
 			memo: 'Deposit {eosio.token} to EOStrader'
         };
@@ -57,7 +57,7 @@ class DepositBox extends React.Component {
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
 			from: AccountInfo.account.currentAccount,
-			to: "exchangea",
+			to: "exchangeb",
 			quantity: this.state.tokenDepositAmount + " " + CoinInfo.coin.symbol,
 			memo: `Deposit {${CoinInfo.coin.contract}} to EOStrader`
         };
@@ -110,7 +110,7 @@ class WithdrawBox extends React.Component {
 	}
 
 	handleEosWithdraw() {
-		transactionTemplate.code = "exchangea",
+		transactionTemplate.code = "exchangeb",
 		transactionTemplate.action = "makewithdraw";
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
@@ -122,7 +122,7 @@ class WithdrawBox extends React.Component {
 	}
 
 	handleTokenWithdraw() {
-		transactionTemplate.code = "exchangea",
+		transactionTemplate.code = "exchangeb",
 		transactionTemplate.action = "makewithdraw";
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {

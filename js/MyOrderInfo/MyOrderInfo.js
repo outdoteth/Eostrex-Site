@@ -21,7 +21,7 @@ class MyOrderInfo extends EventEmitter {
 	}
 
 	updateOrders() {
-		eos.getTableRows({ code: "exchangea", scope:  AccountInfo.account.currentAccount, table: "myorders", json: true }).then(res=> {
+		eos.getTableRows({ code: "exchangeb", scope:  AccountInfo.account.currentAccount, table: "myorders", json: true }).then(res=> {
 			this.orders = [];
 			for (var i = 0; i < res.rows.length; i++) {
 				const rowRef = res.rows[i];
@@ -30,7 +30,8 @@ class MyOrderInfo extends EventEmitter {
 					amount: Number(rowRef.amount_of_token.replace(/ .*/,'')).toFixed(4), //e.g. 0.123
 					date: rowRef.expiration_date,
 					orderId: rowRef.order_id,
-					tokenContract: rowRef.target_token_contract
+					tokenContract: rowRef.target_token_contract,
+					price: rowRef.price
 				}
 				this.orders.push(order);
 			}

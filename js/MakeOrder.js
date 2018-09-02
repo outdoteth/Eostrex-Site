@@ -61,7 +61,7 @@ class BuyBox extends React.Component {
 
 	handleBuyTx() {
 		const buyTx = {
-			code: "exchangea",
+			code: "exchangeb",
 			action: "makeorder",
 			from: AccountInfo.account.currentAccount,
 			data: {
@@ -150,7 +150,7 @@ class SellBox extends React.Component {
 
 	handleSellTx() {
 		const sellTx = {
-			code: "exchangea",
+			code: "exchangeb",
 			action: "makeorder",
 			from: AccountInfo.account.currentAccount,
 			data: {
@@ -161,6 +161,7 @@ class SellBox extends React.Component {
 				price: parseFloat(this.state.priceSetter).toFixed(8)
 			}
 		}
+		console.log(sellTx.data.price);
 		AccountActions.handleTransaction(sellTx);
 	}
 

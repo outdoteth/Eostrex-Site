@@ -1,2 +1,2 @@
 const socket = io();
-export const Socket = io();
+export const Socket = socket;

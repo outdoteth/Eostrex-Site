@@ -37,12 +37,26 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
 		db.listCollections({name: "cachedtrades" + token_contract}).next(function(err, collref) {
 			if (!collref) {
 				db.createCollection("cachedtrades" + token_contract);
+				db.collection("cachedtrades" + token_contract).insertOne({name: "cachedtrades", trades: []});
 			}
+			const cachedTrades = db.collection("cachedtrades" + token_contract);
+			let cachedTradesArray;
+			db.collection("cachedtrades" + token_contract).find({}).toArray((err, doc) => {
+				if ( !doc[0] ) {
+					return;
+				}
+				cachedTradesArray = doc[0].trades;
+				if (cachedTradesArray.length >= 50) {
+					cachedTradesArray.splice(0, 1);
+				}
+				cachedTradesArray.push({data: change.fullDocument.act.data, timestamp: change.fullDocument.createdAt});
+				cachedTrades.updateMany({ name: "cachedtrades" }, { $set: { trades: cachedTradesArray } });
+			});
 		});
-		const cachedTrades = db.collection("cachedtrades" + token_contract);
-		cachedTrades.insertOne({data: change.fullDocument.act.data, timestamp: change.fullDocument.createdAt});
 	});
 });
+
+//Listen to the cached trades collection inside the websocket handler
 
 let sessions = []; //Array of contracts that are currently being polled
 
@@ -76,6 +90,9 @@ io.on( 'connection', function(socket) {
 
 	socket.on("order-request", ( contract ) => {
 		let isLive = false;
+		if (cachedOrdersCursor) {
+			cachedOrdersCursor.close();
+		}
 		sessions.forEach(( session ) => {
 			if ( session === contract ) {
 				isLive = true;
@@ -99,6 +116,7 @@ io.on( 'connection', function(socket) {
 	});
 
 	socket.on("trade-request", ( contract ) => {
+
 	});
 });
 
@@ -119,11 +137,13 @@ function startOrderPoll( contract ) {
 			return;
 		}
 	}
-	eos.getTableRows({	code: "exchange5",
+	eos.getTableRows({	code: "exchangeb",
 						scope: contract,
 						table: "orders",
 						limit: 0,
-						json: true }).then( orders => {
+						json: true }).catch(err => {
+							console.log(err);
+						}).then( orders => {
 							///Sort the orders and push them into the cache
 							let buyOrders = [];
 							let sellOrders = [];
@@ -156,7 +176,6 @@ function startOrderPoll( contract ) {
 						});
 }
  
-///TODO: Listen for takeorders
 
 
 /** TODO: Implement a way to cache the orders as they come in from nodeos mongodb plugin

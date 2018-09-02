@@ -77,7 +77,7 @@ class AccountInfo extends EventEmitter {
 					this.account.wallet.tokenBalance = "0.000";
 				}
 				//Update contract balance
-				eos.getTableRows({ code: "exchangea", scope: account, table: "accounts", json: true }).then(res3=>{
+				eos.getTableRows({ code: "exchangeb", scope: account, table: "accounts", json: true }).then(res3=>{
 					let encodedEosContract = Eos.modules.format.encodeName("eosio.token", false);
 					let encodedTokenContract = Eos.modules.format.encodeName(CoinInfo.coin.contract, false);
 					let foundTBalance = false;

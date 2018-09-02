@@ -45,7 +45,7 @@ class Table extends React.Component {
 
 	render() {
 		const orders = this.state.orders.map((order) =>
-									  			<Orders price={order.amount + " EOS/" + order.symbol} date={order.date} orderId={order.orderId} amount={order.amount + " " + order.symbol} contract={order.tokenContract}/>
+									  			<Orders price={order.price} date={order.date} orderId={order.orderId} amount={order.amount + " " + order.symbol} contract={order.tokenContract}/>
 											);
 		return(
 				<table>
@@ -77,7 +77,7 @@ class Orders extends React.Component {
 	}
 
 	handleCancel() {
-		transactionTemplate.code = "exchangea";
+		transactionTemplate.code = "exchangeb";
 		transactionTemplate.action = "cancelorder";
 		transactionTemplate.from = AccountInfo.account.currentAccount;
 		transactionTemplate.data = {
