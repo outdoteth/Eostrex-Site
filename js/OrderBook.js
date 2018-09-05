@@ -7,6 +7,11 @@ import * as OrderBookActions from "./OrderBookInfo/OrderBookActions.js";
 import PastTradeInfo from "./PastTradeInfo/PastTradeInfo.js";
 import * as PastTradeActions from "./PastTradeInfo/PastTradeActions.js";
 
+import AccountInfo from "./AccountInfo/AccountInfo.js";
+
+import TakeOrderBox from "./TakeOrderBox.js";
+
+
 class BuyOrderLi extends React.Component {
 	constructor(props) {
 		super(props);
@@ -18,14 +23,35 @@ class BuyOrderLi extends React.Component {
 			maker_account: this.props.maker_account,
 			order_id: this.props.order_id,
 			price: this.props.price,
-			target_token_contract: this.props.target_token_contract
+			target_token_contract: this.props.target_token_contract,
+			symbol: this.props.symbol,
+			isClicked: false
 		}
+		
+		this.openTakeOrder = this.openTakeOrder.bind(this);
+	}
+
+	componentWillMount() {
+		AccountInfo.on("TRANSACTION_MADE", ()=>{this.setState({isClicked: false})})
+	}
+
+	openTakeOrder() {
+		this.setState((prevState) => {
+			return {isClicked: !prevState.isClicked}
+		});
 	}
 
 	render() {
+		const renderBox = this.state.isClicked ? <TakeOrderBox 	openTakeOrder={this.openTakeOrder} 
+																price={this.state.price} 
+																tokenAmount={this.state.amount_of_token}
+																orderId={this.state.order_id}
+																symbol={this.state.symbol}
+																buy_or_sell="1" /> : "";
 		return (
 				<li>
-	                <div>
+					{renderBox}
+	                <div onClick={this.openTakeOrder}>
 	                    <h3 class="price2">{this.state.price}</h3>
 	                    <h3 class="amount1">{this.state.amount_of_token}</h3>
 	                    <div class="total1">
@@ -47,14 +73,35 @@ class SellOrderLi extends React.Component {
 			maker_account: this.props.maker_account,
 			order_id: this.props.order_id,
 			price: this.props.price,
-			target_token_contract: this.props.target_token_contract
+			target_token_contract: this.props.target_token_contract,
+			symbol: this.props.symbol,
+			isClicked: false
 		}
+
+		this.openTakeOrder = this.openTakeOrder.bind(this);
+	}
+
+	componentWillMount() {
+		AccountInfo.on("TRANSACTION_MADE", ()=>{this.setState({isClicked: false})})
+	}
+
+	openTakeOrder() {
+		this.setState((prevState) => {
+			return {isClicked: !prevState.isClicked}
+		})
 	}
 
 	render() {
+		const renderBox = this.state.isClicked ? <TakeOrderBox 	openTakeOrder={this.openTakeOrder} 
+																price={this.state.price} 
+																tokenAmount={this.state.amount_of_token}
+																orderId={this.state.order_id}
+																symbol={this.state.symbol}
+																buy_or_sell="0" /> : "";
 		return (
 				<li>
-                    <div>
+					{renderBox}
+                    <div onClick={this.openTakeOrder}>
                         <h3 class="price1">{this.state.price}</h3>
                         <h3 class="amount1">{this.state.amount_of_token}</h3>
                         <div class="total1">
@@ -74,27 +121,48 @@ class OrderBook extends React.Component {
 		this.setOrders = this.setOrders.bind(this);
 		this.state = {
 			buyOrders: OrderBookInfo.buyOrders,
-			sellOrders: OrderBookInfo.sellOrders
+			sellOrders: OrderBookInfo.sellOrders,
+			lastPrice: this.props.lastPrice,
+			secondLastPrice: this.props.secondLastPrice
 		}
+		this.updateTrades = this.updateTrades.bind(this);
 	}
 
 	componentWillMount() {
 		OrderBookInfo.on( "ORDERS_UPDATED", this.setOrders );
+		PastTradeInfo.on("CACHED_TRADES_UPDATED", this.updateTrades);
+	}
+
+	updateTrades() {
+		console.log("ASDASDASDASD");
+		console.log(PastTradeInfo.cachedTrades);
+		this.setState({
+			buyOrders: OrderBookInfo.buyOrders,
+			sellOrders: OrderBookInfo.sellOrders,
+			lastPrice: parseFloat(PastTradeInfo.cachedTrades[0].data.price).toFixed(7),
+			secondLastPrice: PastTradeInfo.cachedTrades[1] ? parseFloat(PastTradeInfo.cachedTrades[1].data.price).toFixed(7) : 0
+		})
 	}
 
 	setOrders() {
-		this.setState({
-			buyOrders: OrderBookInfo.buyOrders,
-			sellOrders: OrderBookInfo.sellOrders
+		this.setState((prevState) => {
+			console.log(prevState);
+			return ({
+				buyOrders: OrderBookInfo.buyOrders,
+				sellOrders: OrderBookInfo.sellOrders,
+				lastPrice: prevState.lastPrice,
+				secondLastPrice: prevState.secondLastPrice
+			})
 		});
 	}
 
 	render() {
+		const percentageChange = parseFloat((this.state.lastPrice - this.state.secondLastPrice) / this.state.secondLastPrice * 100).toFixed(2);
 		const buyOrders = this.state.buyOrders.map( (order) =>
-			<BuyOrderLi price={parseFloat(order.price).toFixed(7)} amount_of_token={order.amount_of_token.replace(/ .*/,'')}/>
+			<BuyOrderLi order_id={order.order_id} price={parseFloat(order.price).toFixed(7)} amount_of_token={order.amount_of_token.replace(/ .*/,'')} symbol={order.amount_of_token.split(" ")[1]}/>
 		);
 		const sellOrders = this.state.sellOrders.map( (order) =>
-			<SellOrderLi price={parseFloat(order.price).toFixed(7)} amount_of_token={order.amount_of_token.replace(/ .*/,'')}/>
+			<SellOrderLi order_id={order.order_id} price={parseFloat(order.price).toFixed(7)} amount_of_token={order.amount_of_token.replace(/ .*/,'')} symbol={order.amount_of_token.split(" ")[1]}/>
 		);
 		return(
 				<div class="ababa">
@@ -106,8 +174,8 @@ class OrderBook extends React.Component {
 		                </div>
 		            </div>
 		            <div class="halfway-order-book">
-		                <h3>0.5478 EOS</h3>
-		                <h3>+1.06%</h3>
+		                <h3>{this.state.lastPrice}</h3>
+		                <h3 class={percentageChange >= 0 ? "trade-buy" : "trade-sell"} >{percentageChange >= 0 ? "+" : ""}{percentageChange}%</h3>
 		            </div>
 		            <div class="order-buy-list">
 	                    <div>
@@ -126,8 +194,9 @@ class PastTradeLi extends React.Component {
 		super(props);
 		this.state = {
 			price: this.props.price,
-			amount: this.props.amount_of_token,
-			timestamp: this.props.timestamp
+			amount: this.props.amount,
+			timestamp: this.props.timestamp,
+			buy_or_sell: this.props.buy_or_sell
 		}
 	}
 
@@ -135,9 +204,9 @@ class PastTradeLi extends React.Component {
 		return (
 				<li>
 	                <div class="past-trade-div-single">
-                        <h3>0.1234</h3>
-                        <h3>23589</h3>
-                        <h3>18:23:21</h3>
+                        <h3 class={this.state.buy_or_sell == 1 ? "trade-sell" : "trade-buy"}>{this.state.price}</h3>
+                        <h3>{this.state.amount}</h3>
+                        <h3>{this.state.timestamp}</h3>
                     </div>    
                 </li>
 			)
@@ -145,10 +214,10 @@ class PastTradeLi extends React.Component {
 }
 
 class PastTrades extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
-			trades: []
+			trades: this.props.trades
 		}
 		this.updateTrades = this.updateTrades.bind(this);
 	}
@@ -160,17 +229,17 @@ class PastTrades extends React.Component {
 	updateTrades() {
 		this.setState({
 			trades: PastTradeInfo.cachedTrades
-		})
+		});
 	}
 
 	render() {
-		//const trades = this.state.trades.map((trade) => 
-		//);
+		let trades = this.state.trades.map((trade) =>
+			<PastTradeLi key={trade.timestamp} price={parseFloat(trade.data.price).toFixed(7)} buy_or_sell={trade.data.buy_or_sell} amount={trade.data.amount_of_token.split(" ")[0]} timestamp={trade.timestamp.split("T").pop().split(".")[0]}/> 
+		);
 		return(
 				<div class="past-trades-div">
 	                <ul class="past-trades-ul">
-	                	<PastTradeLi/>
-	                	<PastTradeLi/>
+	                	{trades}
 	                </ul>
 	            </div>
 			)
@@ -181,7 +250,10 @@ export default class OrdersAndTrades extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			orderBookClicked: true
+			orderBookClicked: true,
+			trades: [],
+			lastPrice: 0,
+			secondLastPrice: 0
 		}
 
 		this.handleSwitch = this.handleSwitch.bind(this);
@@ -189,13 +261,18 @@ export default class OrdersAndTrades extends React.Component {
 
 	handleSwitch() {
 		this.setState((prevState) => {
-			return {orderBookClicked: !prevState.orderBookClicked};  
+			return ({
+				orderBookClicked: !prevState.orderBookClicked,
+				trades: PastTradeInfo.cachedTrades,
+				lastPrice: PastTradeInfo.cachedTrades[0] ? parseFloat(PastTradeInfo.cachedTrades[0].data.price).toFixed(7) : 0,
+				secondLastPrice: PastTradeInfo.cachedTrades[1] ? parseFloat(PastTradeInfo.cachedTrades[1].data.price).toFixed(7) : 0
+			});  
 		});
 	}
 
 	render() {
 		const orderBookClicked = this.state.orderBookClicked;
-		const toDisplay = orderBookClicked ? <OrderBook/> : <PastTrades/>;
+		const toDisplay = orderBookClicked ? <OrderBook lastPrice={this.state.lastPrice} secondLastPrice={this.state.secondLastPrice}/> : <PastTrades trades={this.state.trades}/>; //Have to pass props into PastTrades because it doesnt initially render
 		return (
 				<div class="container2">
 					<div class="order-container">

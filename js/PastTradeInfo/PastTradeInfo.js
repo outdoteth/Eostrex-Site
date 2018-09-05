@@ -8,7 +8,7 @@ class PastTradeInfo extends EventEmitter {
 	}
 
 	updateCachedTrades(trades) {
-		this.cachedTrades = trades;
+		this.cachedTrades = trades.reverse();
 		this.emit("CACHED_TRADES_UPDATED");
 	}
 

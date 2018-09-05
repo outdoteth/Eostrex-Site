@@ -8,6 +8,174 @@ html, body {
     height: 100%;
 }
 
+.cover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    background-color: rgba(70,70,70,0.9);
+}
+
+.cover:hover {
+    cursor: default;
+}
+
+.take-order-tit-div {
+    font-size: 18px;
+    padding-left: 30px;
+    border-bottom: 1px solid black;
+    width: calc(100% - 30px);
+    display: flex;
+}
+
+.take-order-tit-div > h1 {
+    float: right;
+    margin-bottom: 0;
+    font-size: 17px;
+    color: rgb(255, 255, 255, 0.3);
+    margin-left: 240px;
+    margin-top: 24px;
+}
+
+.take-order-tit-div > h1:hover {
+    cursor: pointer;
+    color: rgb(255, 255, 255, 0.9);
+}
+
+.take-order-form > form > div > input {
+    height: 35px;
+    width: 82%;
+    margin-left: 30px;
+    border: transparent;
+    border-radius: 3px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.take-order-form > form > div > input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.order-id-fill {
+    font-size: 15px;
+    margin-left: 31px;
+}
+
+.amount-to-fill {
+    font-size: 11px;
+    margin-bottom: 5;
+    margin-left: 31px;
+}
+
+.take-order-form > form > div {
+    display: flex;
+}
+
+
+.order-id-expiration {
+    font-size: 15px;
+    margin-left: 31px;
+}
+
+.take-order-form > div {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    display: flex;
+}
+
+.take-order-form > form > div > h3 {
+    position: relative;
+    right: 60px;
+    margin: 0;
+    padding-top: 12px;
+    padding-left: 10px;
+    color: black;
+    width: 2px;
+    font-size: 12px;
+    border-left: 1px solid black;
+}
+
+
+.fill-take-order-cancel {
+    height: 40px;
+    font-size: 15px;
+    font-weight: bold;
+    width: 132px;
+    border: none;
+    color: rgb(255, 255, 255, 0.3);
+    background-color: transparent;
+    border: 1px solid rgb(255, 255, 255, 0.3);
+    border-radius: 3px;
+    float: right;
+    margin-top: 15px;
+    margin-right: 20px;
+}
+
+.fill-take-order-cancel:hover {
+    color: white;
+    background-color: rgb(255, 255, 255, 0.1);
+    border: 1px solid rgb(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+.fill-take-order-buy {
+    height: 40px;
+    font-size: 15px;
+    font-weight: bold;
+    width: 180px;
+    border: none;
+    color: white;
+    background-color: rgb(68, 190, 36);
+    border-radius: 3px;
+    float: right;
+    margin-top: 15px;
+    margin-right: 40px;
+}
+
+.fill-take-order-sell {
+    height: 40px;
+    font-size: 15px;
+    font-weight: bold;
+    width: 180px;
+    border: none;
+    color: white;
+    background-color: red;
+    border-radius: 3px;
+    float: right;
+    margin-top: 15px;
+    margin-right: 40px;
+}
+
+.fill-take-order-sell:hover {
+    cursor: pointer;
+    background-color: rgb(255, 0, 0, 0.85);
+}
+
+.fill-take-order-buy:hover {
+    cursor: pointer;
+    background-color: rgb(68, 190, 36, 0.8);
+}
+
+.take-trade-box {
+    position: absolute;
+    z-index: 12;
+    left: calc(50% - 200px);
+    top: calc(45% - 200px);
+    background-color:  rgb(47, 61, 69);
+    border: 1px solid black;
+    border-radius: 5px;
+    height: 340px;
+    width: 400px;
+}
+
+.take-trade-box:hover {
+    cursor: default;
+}
+
 .order-container {
     height: 27px;
     margin: 0px;
@@ -38,8 +206,7 @@ html, body {
 .order-sell-list > div > ul {
     list-style-type: none;
     padding: 0;
-    
-    margin-right: 15px;
+
 }
 
 .order-buy-list > div > ul {
@@ -62,14 +229,29 @@ html, body {
     flex-direction: row;
 }
 
+.order-buy-list > div > ul > li:hover {
+    cursor: pointer;
+    font-weight: 10000;
+    color: rgb(255, 255, 255, 0.7);
+}
+
+
+.order-sell-list > div > ul > li:hover {
+    cursor: pointer;
+    font-weight: 10000;
+    color: rgb(255, 255, 255, 0.7);
+}
+
 .order-sell-list > div > ul > li > div > h3 {
+    font-size: 11px;
     margin: 0px;
-    padding: 0px;
+    padding-right: 50px;
 }
 
 .order-buy-list > div > ul > li > div > h3 {
+    font-size: 11px;
     margin: 0px;
-    padding: 0px;
+    padding-right: 50px;
 }
 
 
@@ -82,6 +264,14 @@ html, body {
 .order-buy-list > div > ul > li > div > div > h3 {
     margin: 0px;
     padding: 0px;
+}
+
+.trade-buy {
+    color: #00DF80;
+}
+
+.trade-sell {
+    color: #FF004E;
 }
 
 .price1 {
@@ -139,7 +329,7 @@ html, body {
 }
 
 .past-trades-div {
-    height: calc(100% - 27px);
+    height: calc(100% - 40px);
     width: 100%;
     padding: 0;
     margin: 0;
@@ -194,18 +384,19 @@ html, body {
 
 .halfway-order-book > h3 {
     display: inline-block;
-    text-align: center;
+    margin-top: 8px;
+    font-size: 15px;
     margin-right: 10px;
     margin-left: 10px;
-    margin-top: 4px;
-    margin-bottom: 5px;
+    vertical-align: top;
 }
 
 .halfway-order-book {
     text-align: center;
-    height: 5.4%;
-    border-top: 1px solid rgb(255, 255, 255, 0.3);;
-    border-bottom: 1px solid rgb(255, 255, 255, 0.3);
+    background-color: black;
+    height: 30px;
+    border-top: 1px solid rgb(255, 255, 255, 0.1);;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.1);
 }
 
 .past-trade-my-order-div {
@@ -408,7 +599,7 @@ td {
 }
 
 #profile {
-    background-color: background-color: rgb(25, 33, 38);
+    background-color: rgb(25, 33, 38);
 }
 
 .nums {
@@ -541,7 +732,9 @@ td {
 
 #container > div {
     background-color: rgb(25, 33, 38);
-    border: 0.1px solid rgb(0, 0, 0, 0.4);
+    border-right: 3px solid rgb(0, 0, 0, 0.4);
+
+    border-top: 3px solid rgb(0, 0, 0, 0.4);
 }
 
 
@@ -619,7 +812,7 @@ td {
     height:44px;
     width: 100%;
     left: 0%;
-    background-color: rgb(25, 33, 38);
+    background-color: rgb(25, 33, 3);
 }
 
 

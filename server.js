@@ -85,7 +85,12 @@ io.on( 'connection', function(socket) {
 				}
 			});
 		}
-		cachedOrdersCursor.close();
+		if (cachedOrdersCursor) {
+			cachedOrdersCursor.close();
+		}
+		if (cachedTradesCursor) {
+			cachedTradesCursor.close();
+		}
 	});
 
 	socket.on("order-request", ( contract ) => {
@@ -116,8 +121,17 @@ io.on( 'connection', function(socket) {
 	});
 
 	socket.on("trade-request", ( contract ) => {
+		if (cachedTradesCursor) {
+			cachedTradesCursor.close();
+		}
 		db.collection("cachedtrades" + contract).find({}).toArray((err, doc) => {
 			socket.emit("trades-sent", doc);
+		});
+		cachedTradesCursor = db.collection("cachedtrades" + contract).watch({});
+		cachedTradesCursor.on("change", () => {
+			db.collection("cachedtrades" + contract).find({}).toArray((err, doc) => {
+				socket.emit("trades-sent", doc);
+			});
 		});
 	});
 });

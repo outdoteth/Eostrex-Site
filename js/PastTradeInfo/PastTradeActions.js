@@ -2,8 +2,7 @@ import { pastTradeDispatcher } from "./PastTradeInfo.js";
 import { Socket } from "../socket/socket.js";
 
 Socket.on("trades-sent", (res) => {
-	console.log(res);
-	updateTrades(res);
+	updateTrades(res[0].trades);
 });
 
 
