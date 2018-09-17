@@ -26,7 +26,7 @@ const url = 'mongodb://localhost:27017';
 const dbName = 'EOS';
 let db = null;
 
-MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
+/*MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
 	console.log("Connected successfully to server");
 	db = client.db(dbName);
 
@@ -54,7 +54,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
 			});
 		});
 	});
-});
+});*/
 
 //Listen to the cached trades collection inside the websocket handler
 
@@ -65,7 +65,7 @@ app.get("/getorders/:contract", (req, res) => {
 });
 
 
-io.on( 'connection', function(socket) {
+/*io.on( 'connection', function(socket) {
 	let cachedOrdersCursor;
 	let initiatedPoll = false;
 	let contractInitiated;
@@ -134,7 +134,7 @@ io.on( 'connection', function(socket) {
 			});
 		});
 	});
-});
+});*/
 
 http.listen(3000, function(){
 	console.log('listening on *:3000');
